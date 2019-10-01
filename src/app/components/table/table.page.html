@@ -4,12 +4,26 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <ion-card>
-        <div>
-          <ion-grid>
-            <ion
-          </ion-grid>
-        </div>
-    </ion-card>
+<ion-content class="ion-padding">
+    <form>
+        <ion-grid>
+            <ion-row fixed>
+                <ion-item *ngFor="let table of tableService.tables" size="2">
+                    <div>
+                        <img src="assets/images/busyTable.jpg" *ngIf="table.status === 'BUSY'">
+                        <img src="assets/images/freeTable.jpg" *ngIf="table.status === 'FREE'">
+                        <img src="assets/images/reservedTable.jpg" *ngIf="table.status === 'RESERVED'">
+                    </div>
+                    <hr class="apna_hr1" style="margin-top:1px; padding: 0 0.25em; margin-bottom:1px;">
+                    <ion-grid>
+                        <ion-label>
+                            <ion-col>N#: {{table.noTable}}</ion-col>
+                            <ion-col>Nombre de chaises: {{table.nbChaises}}</ion-col>
+                        </ion-label>
+                        <ion-button (click)="createCommand(table)">Ajouter Commande</ion-button>
+                    </ion-grid>
+                </ion-item>
+            </ion-row>
+        </ion-grid>
+    </form>
 </ion-content>

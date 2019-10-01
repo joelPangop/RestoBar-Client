@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Request, Response} from 'express';
 import {LigneCommande} from '../models/ligne-commande';
-import {Session} from 'protractor';
 import {GestionPanier} from './gestion-panier';
 import {ProduitPanier} from '../models/produit-panier';
 import {Produit} from '../models/produit';
@@ -9,60 +7,100 @@ import {Table} from '../models/table';
 import {ProduitService} from './produit.service';
 import {CommandeService} from './commande.service';
 import {Commande} from '../models/commande';
+import {Storage} from '@ionic/storage';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PanierTransactionService {
 
-    constructor(private produitService: ProduitService, private commandeService: CommandeService) {
+    panier: Map<number, LigneCommande> = new Map<number, LigneCommande>();
+
+    constructor(private produitService: ProduitService, private commandeService: CommandeService, private  storage: Storage) {
+        this.panier = new Map<number, LigneCommande>();
     }
 
-    updatePanier(lignecmd: LigneCommande, operation: string) {
-
+    public async updatePanier(lignecmd: LigneCommande, operation: string, produitToStock: Produit) {
         switch (operation) {
             case 'ajouter':
-                GestionPanier.ajouter(this.getPanier(), lignecmd);
+                this.getPanier().then(res => {
+                    GestionPanier.ajouter(res as Map<number, LigneCommande>, lignecmd, produitToStock);
+                    this.panier = res;
+                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                });
                 break;
             case 'enlever':
-                GestionPanier.enlever(this.getPanier(), lignecmd);
+                this.getPanier().then(res => {
+                    GestionPanier.enlever(res as Map<number, LigneCommande>, lignecmd, produitToStock);
+                    this.panier = res;
+                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                });
                 break;
             case 'vider':
-                GestionPanier.supprimer(this.getPanier(), lignecmd);
+                this.getPanier().then(res => {
+                    GestionPanier.supprimer(res as Map<number, LigneCommande>, lignecmd, produitToStock);
+                    this.panier = res;
+                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                });
+                break;
+
+            case 'enleverDuPanier':
+                this.getPanier().then(res => {
+                    res.delete(produitToStock.id);
+                    this.panier = res;
+                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                });
                 break;
             default:
                 break;
         }
-        sessionStorage.setAttribute('panier', this.getPanier());
+    }
+     strMapToObj(strMap) {
+        let obj = Object.create(null);
+        for (let [k,v] of strMap) {
+            // We don’t escape the key '__proto__'
+            // which can cause problems on older engines
+            obj[k] = v;
+        }
+        return obj;
+    }
+     objToStrMap(obj) {
+        let strMap = new Map<number, LigneCommande>();
+        for (let k of Object.keys(obj)) {
+            strMap.set(+k, obj[k]);
+        }
+        return strMap;
     }
 
-    public getPanier() {
+    jsonToStrMap(jsonStr) {
+        return this.objToStrMap(JSON.parse(jsonStr));
+    }
+    public async getPanier() {
         let panier: Map<number, LigneCommande> = null;
-
-        if (sessionStorage.getItem('panier') == null) {
-            panier = new Map<number, LigneCommande>();
-            sessionStorage.setAttribute('panier', panier);
-        } else {
-            panier = sessionStorage.getAttribute('panier') as Map<number, LigneCommande>;
+        if (sessionStorage.getItem('panier')) {
+            const sessionPanier = this.jsonToStrMap(sessionStorage.getItem('panier')) as Map<number, LigneCommande>;
+            panier = sessionPanier;
             console.log(panier.size);
+        } else {
+            panier = new Map<number, LigneCommande>();
         }
         return panier;
     }
 
-    public viderPanier() {
-        const panier: Map<number, LigneCommande> = this.getPanier();
+    public async viderPanier() {
+        const panier: Map<number, LigneCommande> = await this.getPanier();
         GestionPanier.vider(panier);
     }
 
-    public getNbArticles() {
-        const panier: Map<number, LigneCommande> = this.getPanier();
-        sessionStorage.setAttribute('nbArticles', GestionPanier.nbArticles(panier));
+    public async getNbArticles() {
+        const panier: Map<number, LigneCommande> = await this.getPanier();
+        await sessionStorage.setItem('nbArticles', JSON.stringify(this.strMapToObj(GestionPanier.nbArticles(panier))));
     }
 
     public async getPanierProduits() {
         let listPanierProds: ProduitPanier[] = null;
         let montant = 0;
-        const panier: Map<number, LigneCommande> = this.getPanier();
+        const panier: Map<number, LigneCommande> = await this.getPanier();
 
         if (panier != null) {
             listPanierProds = new Array();
@@ -107,7 +145,7 @@ export class PanierTransactionService {
                 panier.set(l.produit.id, l);
             }
         }
-        sessionStorage.setAttribute('panier', panier);
+        sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(panier.entries())));
         if (panier != null) {
             listPanierProds = [];
 
@@ -134,14 +172,11 @@ export class PanierTransactionService {
         return listPanierProds;
     }
 
-    public getSubTotal() {
-        let subtotal = 0;
-
-        const listPanierProds: ProduitPanier[] = this.getPanierProduitsList();
-
-        if (listPanierProds != null) {
-            for (const p of listPanierProds) {
-                subtotal += p.quantite * p.prix;
+    public getSubTotal(ligneCommandes: LigneCommande[]) {
+        let subtotal: number = 0;
+        if (ligneCommandes != null) {
+            for (const p of ligneCommandes) {
+                subtotal += p.quantite * p.produit.prix;
             }
         }
         return subtotal;

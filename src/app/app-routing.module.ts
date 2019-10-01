@@ -8,7 +8,8 @@ const routes: Routes = [
   { path: 'produit', loadChildren: './components/produit/produit.module#ProduitPageModule' },
   { path: 'commande', loadChildren: './components/commande/commande.module#CommandePageModule' },
   { path: 'user', loadChildren: './components/user/user.module#UserPageModule' },
-  { path: 'edituser', loadChildren: './components/edituser/edituser.module#EdituserPageModule' },
+  { path: 'edituser/:id', loadChildren: './components/edituser/edituser.module#EdituserPageModule' },
+  { path: 'create-commande', loadChildren: './components/create-commande/create-commande.module#CreateCommandePageModule' },
 ];
 
 @NgModule({
