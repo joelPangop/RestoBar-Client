@@ -5,9 +5,7 @@ import {Table} from './table';
 export class LigneCommande {
 
     constructor() {
-        this.id = 0;
         this.quantite = 0;
-        this.commande = new Commande();
         this.produit = new Produit();
         this.table = new Table();
     }

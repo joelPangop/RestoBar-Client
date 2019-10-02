@@ -3,12 +3,10 @@ import { LigneCommande } from './ligne-commande';
 
 export class Commande {
 
-    constructor(id = 0, numCmd = 0, montant = 0, complete = false) {
-        this.id = id;
-        this.numCmd = numCmd;
-        this.montant = montant;
-        this.complete = complete;
-        this.table = new Table();
+    constructor() {
+        this.numCmd = 0;
+        this.montant = 0;
+        this.complete = false;
         this.ligneCommande = [];
         this.dateLivraison = new Date();
     }
@@ -17,7 +15,6 @@ export class Commande {
     numCmd: number;
     montant: number;
     complete: boolean;
-    table: Table;
     ligneCommande: LigneCommande[];
     dateLivraison: Date;
 }

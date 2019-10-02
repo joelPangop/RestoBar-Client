@@ -1,4 +1,3 @@
-import { Stock } from './stock';
 import { LigneCommande } from './ligne-commande';
 
 export class Produit {
@@ -10,8 +9,6 @@ export class Produit {
         this.quantite = quantite;
         this.prix = prix;
         this.type = type;
-        this.stock = new Stock();
-        this.ligneCommandes = [];
     }
 
     id: number;
@@ -20,6 +17,4 @@ export class Produit {
     type: string;
     quantite: number;
     prix: number;
-    stock: Stock;
-    ligneCommandes: LigneCommande[];
 }

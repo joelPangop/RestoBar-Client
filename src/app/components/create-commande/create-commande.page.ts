@@ -53,6 +53,6 @@ export class CreateCommandePage implements OnInit {
     }
 
     async checkoutcommand() {
-        this.panierService.checkoutCommand(this.getCommandLines());
+        this.panierService.checkoutCommand(this.getCommandLines(), this.table);
     }
 }

@@ -1,11 +1,13 @@
 import {Injectable} from '@angular/core';
 import {LigneCommande} from '../models/ligne-commande';
-import {GestionPanier} from './gestion-panier';
 import {ProduitService} from './produit.service';
 import {Produit} from '../models/produit';
 import {PanierTransactionService} from './panier-transaction.service';
 import {HttpClient} from '@angular/common/http';
 import {Table} from '../models/table';
+import {Commande} from '../models/commande';
+import {tap} from 'rxjs/operators';
+import {TableStatus} from '../models/table-status';
 
 @Injectable({
     providedIn: 'root'
@@ -47,10 +49,22 @@ export class PanierService {
 
     }
 
-    public checkoutCommand(panier: LigneCommande[]) {
+    public checkoutCommand(panier: LigneCommande[], table: Table) {
         let totalMontant = this.panierTransactionService.getSubTotal(panier);
-        let url: string = this.URL + `/${totalMontant}`;
-        return this.http.post(url, panier);
+        let commande = new Commande();
+        commande.complete = false;
+        commande.dateLivraison = new Date();
+        commande.montant = totalMontant;
+        commande.numCmd = this.getRandomInt(1000);
+        let url: string = this.URL +"?panier="+JSON.stringify(panier);
+        return this.http.post<Commande>(url, commande).pipe(
+            tap(async (res: Commande) => {
+                console.log(res);
+                table.status = TableStatus.BUSY;
+            })
+        ).subscribe(res=>{
+            console.log(res);
+        });
     }
 
     public getPanier(operation: string, produitId: string) {
@@ -59,5 +73,9 @@ export class PanierService {
 
     public getPanierLoaded() {
         return this.panierTransactionService.getPanierProduitsList();
+    }
+
+    getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
     }
 }
