@@ -2,19 +2,12 @@ import { Produit } from './produit';
 
 export class ProduitPanier {
 
-    constructor() {
-        this.produitModel = new Produit();
+    constructor(produit: Produit) {
+        this.produit = produit;
         this.montant = 0;
-        this.prix = 0;
         this.quantite = 0;
-        this.titre = 'titre';
-        this.type = 'type';
     }
-
-    produitModel: Produit;
+    produit: Produit;
     quantite: number;
-    titre: string;
-    type: string;
-    prix: number;
     montant: number;
 }

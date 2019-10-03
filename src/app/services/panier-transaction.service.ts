@@ -20,51 +20,52 @@ export class PanierTransactionService {
         this.panier = new Map<number, LigneCommande>();
     }
 
-    public async updatePanier(lignecmd: LigneCommande, operation: string, produitToStock: Produit) {
+    public async updatePanier(lignecmd: LigneCommande, operation: string) {
         switch (operation) {
-            case 'ajouter':
-                this.getPanier().then(res => {
-                    GestionPanier.ajouter(res as Map<number, LigneCommande>, lignecmd, produitToStock);
-                    this.panier = res;
-                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
-                });
+            case "ajouter":
+                // this.getPanier().then(res => {
+                    GestionPanier.ajouter(this.panier, lignecmd);
+                //     this.panier = res;
+                //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                // });
                 break;
-            case 'enlever':
-                this.getPanier().then(res => {
-                    GestionPanier.enlever(res as Map<number, LigneCommande>, lignecmd, produitToStock);
-                    this.panier = res;
-                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
-                });
-                break;
-            case 'vider':
-                this.getPanier().then(res => {
-                    GestionPanier.supprimer(res as Map<number, LigneCommande>, lignecmd, produitToStock);
-                    this.panier = res;
-                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
-                });
-                break;
+            case "enlever":
+                // this.getPanier().then(res => {
+                    GestionPanier.enlever(this.panier, lignecmd);
 
+                //     this.panier = res;
+                //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                // });
+                break;
+            case "vider":
+                // this.getPanier().then(res => {
+                    GestionPanier.supprimer(this.panier, lignecmd);
+                //     this.panier = res;
+                //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                // });
+                // break;
             case 'enleverDuPanier':
-                this.getPanier().then(res => {
-                    res.delete(produitToStock.id);
-                    this.panier = res;
-                    sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
-                });
+                // this.getPanier().then(res => {
+                    this.panier.delete(lignecmd.produit.id);
+                //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+                // });
                 break;
             default:
                 break;
         }
     }
-     strMapToObj(strMap) {
+
+    strMapToObj(strMap) {
         let obj = Object.create(null);
-        for (let [k,v] of strMap) {
+        for (let [k, v] of strMap) {
             // We don’t escape the key '__proto__'
             // which can cause problems on older engines
             obj[k] = v;
         }
         return obj;
     }
-     objToStrMap(obj) {
+
+    objToStrMap(obj) {
         let strMap = new Map<number, LigneCommande>();
         for (let k of Object.keys(obj)) {
             strMap.set(+k, obj[k]);
@@ -75,6 +76,7 @@ export class PanierTransactionService {
     jsonToStrMap(jsonStr) {
         return this.objToStrMap(JSON.parse(jsonStr));
     }
+
     public async getPanier() {
         let panier: Map<number, LigneCommande> = null;
         if (sessionStorage.getItem('panier')) {
@@ -111,14 +113,12 @@ export class PanierTransactionService {
                     prod = res as Produit;
                 });
                 const cmd: LigneCommande = value;
-                const panierProd: ProduitPanier = new ProduitPanier();
-                panierProd.produitModel = prod;
-                panierProd.titre = prod.nomProduit;
-                panierProd.type = prod.type;
-                panierProd.quantite = cmd.quantite;
-                panierProd.prix = prod.prix;
+                const panierProd: ProduitPanier = new ProduitPanier(prod);
+                panierProd.produit = prod;
+                panierProd.quantite = cmd.produit.quantite;
+                panierProd.produit.prix = prod.prix;
 
-                montant += prod.prix * cmd.quantite;
+                montant += prod.prix * cmd.produit.quantite;
                 panierProd.montant = montant;
                 listPanierProds.push(panierProd);
             }
@@ -153,17 +153,13 @@ export class PanierTransactionService {
                 let p: Produit = null;
                 this.produitService.getProduitById(key).subscribe(res => p = res as Produit);
                 const cmd: LigneCommande = value;
-                const panierProd: ProduitPanier = new ProduitPanier();
-                panierProd.produitModel = p;
+                const panierProd: ProduitPanier = new ProduitPanier(p);
+                panierProd.produit = p;
+                panierProd.quantite = cmd.produit.quantite;
+                panierProd.produit.prix = p.prix;
 
-                panierProd.titre = p.nomProduit;
-                panierProd.type = p.type;
-                panierProd.quantite = cmd.quantite;
-                panierProd.prix = p.prix;
-
-                montant += p.prix * cmd.quantite;
+                montant += p.prix * cmd.produit.quantite;
                 panierProd.montant = montant;
-                panierProd.prix = p.prix;
 
                 listPanierProds.push(panierProd);
             }
@@ -176,7 +172,7 @@ export class PanierTransactionService {
         let subtotal: number = 0;
         if (ligneCommandes != null) {
             for (const p of ligneCommandes) {
-                subtotal += p.quantite * p.produit.prix;
+                subtotal += p.produit.quantite * p.produit.prix;
             }
         }
         return subtotal;
