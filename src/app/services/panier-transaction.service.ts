@@ -22,31 +22,32 @@ export class PanierTransactionService {
 
     public async updatePanier(lignecmd: LigneCommande, operation: string) {
         switch (operation) {
-            case "ajouter":
+            case 'ajouter':
                 // this.getPanier().then(res => {
-                    GestionPanier.ajouter(this.panier, lignecmd);
+                GestionPanier.ajouter(this.panier, lignecmd);
                 //     this.panier = res;
                 //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
                 // });
                 break;
-            case "enlever":
+            case 'enlever':
                 // this.getPanier().then(res => {
-                    GestionPanier.enlever(this.panier, lignecmd);
+                GestionPanier.enlever(this.panier, lignecmd);
 
                 //     this.panier = res;
                 //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
                 // });
                 break;
-            case "vider":
+            case 'vider':
                 // this.getPanier().then(res => {
-                    GestionPanier.supprimer(this.panier, lignecmd);
-                //     this.panier = res;
-                //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
-                // });
-                // break;
+                GestionPanier.supprimer(this.panier, lignecmd);
+            //     this.panier = res;
+            //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
+            // });
+            // break;
             case 'enleverDuPanier':
                 // this.getPanier().then(res => {
-                    this.panier.delete(lignecmd.produit.id);
+                this.panier.delete(lignecmd.produit.id);
+
                 //     sessionStorage.setItem('panier', JSON.stringify(this.strMapToObj(this.panier)));
                 // });
                 break;

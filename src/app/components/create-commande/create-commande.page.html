@@ -8,7 +8,7 @@
     <ion-grid>
         <ion-row>
             <ion-grid>
-                <ion-row *ngFor="let prod of produits">
+                <ion-row *ngFor="let prod of panierService.produits">
                     <ion-col>{{prod.nomProduit}}</ion-col>
                     <ion-col>
                         Quantité: {{prod.quantite}}
@@ -23,7 +23,7 @@
             <ion-grid>
                 <ion-card>
                     <ion-card-header>
-                        Commande
+                        Commande n# {{commandNumber}}
                     </ion-card-header>
                     <ion-card-content>
                         <ion-grid *ngFor="let cmd of getCommandLines()">

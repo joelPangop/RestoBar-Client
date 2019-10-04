@@ -7,7 +7,6 @@ export class Commande {
         this.numCmd = 0;
         this.montant = 0;
         this.complete = false;
-        this.ligneCommande = [];
         this.dateLivraison = new Date();
     }
 
@@ -15,6 +14,5 @@ export class Commande {
     numCmd: number;
     montant: number;
     complete: boolean;
-    ligneCommande: LigneCommande[];
     dateLivraison: Date;
 }

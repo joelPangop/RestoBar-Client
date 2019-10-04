@@ -7,6 +7,7 @@ import {PanierTransactionService} from '../../services/panier-transaction.servic
 import {Table} from '../../models/table';
 import {ProduitPanier} from '../../models/produit-panier';
 import {PredefinedColors} from '@ionic/core';
+import {ProduitService} from '../../services/produit.service';
 
 @Component({
     selector: 'app-create-commande',
@@ -15,23 +16,24 @@ import {PredefinedColors} from '@ionic/core';
 })
 export class CreateCommandePage implements OnInit {
     table: Table;
-    produits: Produit[] = [];
+    commandNumber: number;
 
-    constructor(public panierService: PanierService, public modalController: ModalController, private panierTransactionService: PanierTransactionService,
+    constructor(public panierService: PanierService, public modalController: ModalController,
+                private panierTransactionService: PanierTransactionService, public produitService: ProduitService,
                 public navParams: NavParams, public toastController: ToastController) {
         this.table = this.navParams.get('table');
-        this.produits = this.navParams.get('produits');
     }
 
     ngOnInit() {
         this.getCommandLines();
         this.getExistingPanier();
+        this.getProduits();
     }
 
     public getCommandLines() {
-        let ligneCommandes: LigneCommande[] = [];
-        for (const [key, value] of this.panierTransactionService.panier.entries()) {
-            if (value.table.noTable == this.table.noTable) {
+        const ligneCommandes: LigneCommande[] = [];
+        for (const [key, value] of this.panierService.panier.entries()) {
+            if (value.table.noTable === this.table.noTable) {
                 ligneCommandes.push(value as LigneCommande);
             }
             console.log(ligneCommandes);
@@ -39,17 +41,27 @@ export class CreateCommandePage implements OnInit {
         return ligneCommandes;
     }
 
+    public getProduits() {
+        this.produitService.getAll().subscribe(res => {
+            this.panierService.produits = res as Produit[];
+        });
+    }
+
     public async getExistingPanier() {
         await this.panierService.getCommandeTable(this.table).subscribe(res => {
+            console.log(res);
             this.panierService.ligneCommandes = res as LigneCommande[];
-            for (let ldc of this.panierService.ligneCommandes) {
-                if (ldc.commande.complete == false) {
-                    for (let prod of this.produits) {
-                        if (prod.id === ldc.produit.id) {
-                            prod.quantite -= ldc.quantite;
+            if (this.panierService.ligneCommandes.length > 0) {
+                this.commandNumber = this.panierService.ligneCommandes[0].commande.numCmd;
+                for (const ldc of this.panierService.ligneCommandes) {
+                    if (ldc.commande.complete === false) {
+                        for (const prod of this.panierService.produits) {
+                            if (prod.id === ldc.produit.id) {
+                                prod.quantite -= ldc.quantite;
+                            }
                         }
+                        this.panierService.panier.set(ldc.produit.id, ldc);
                     }
-                    this.panierTransactionService.panier.set(ldc.produit.id, ldc);
                 }
             }
         });
@@ -60,24 +72,26 @@ export class CreateCommandePage implements OnInit {
     }
 
     public async addCommande(produit: Produit) {
-        if (produit.quantite > 0) {
-            let ligneCommande: LigneCommande = new LigneCommande();
+        let ldc: LigneCommande = this.panierService.getLDC(this.table, produit);
+        if (produit.quantite > 0 && !ldc) {
+            const ligneCommande: LigneCommande = new LigneCommande();
+            this.commandNumber = this.getRandomInt();
             ligneCommande.produit = produit;
             ligneCommande.quantite = 1;
+            produit.quantite--;
             ligneCommande.table = this.table;
-            // if (this.panierTransactionService.panier.size >= 0) {
-            //     if (!this.panierTransactionService.panier.get(produit.id)) {
             await this.panierService.updatePanier('ajouter', ligneCommande);
-            //     }
-            //             // }
-        } else {
+        } else if (produit.quantite < 0) {
             this.presentToast('Produit fini en stock');
         }
     }
 
-    public async updatePanier(operation, ligneCommande: LigneCommande) {
+    public updatePanier(operation, ligneCommande: LigneCommande) {
         if (ligneCommande.produit.quantite > 0) {
-            await this.panierService.updatePanier(operation, ligneCommande);
+            this.panierService.updatePanier(operation, ligneCommande);
+            if (operation === 'enleverDuPanier') {
+                this.panierService.updateCommandLine(this.getCommandLines(), ligneCommande, this.table, this.commandNumber);
+            }
         } else {
             this.presentToast('Produit fini en stock');
         }
@@ -88,7 +102,7 @@ export class CreateCommandePage implements OnInit {
     }
 
     async checkoutcommand() {
-        this.panierService.checkoutCommand(this.getCommandLines(), this.table);
+        this.panierService.checkoutCommand(this.getCommandLines(), this.table, this.commandNumber);
     }
 
     async presentToast(msg) {
@@ -104,4 +118,5 @@ export class CreateCommandePage implements OnInit {
     getRandomInt() {
         return Math.floor(Math.random() * Math.floor(30000));
     }
+
 }
