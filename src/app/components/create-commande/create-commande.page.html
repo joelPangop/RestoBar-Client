@@ -8,69 +8,79 @@
     <ion-grid>
         <ion-row>
             <ion-grid>
-                <ion-row *ngFor="let prod of panierService.produits">
-                    <ion-col>{{prod.nomProduit}}</ion-col>
-                    <ion-col>
-                        Quantité: {{prod.quantite}}
-                    </ion-col>
-                    <ion-col>
-                        <button (click)="addCommande(prod)">
-                            <ion-icon name="add-circle"></ion-icon>
-                        </button>
-                    </ion-col>
-                </ion-row>
+                <ion-card>
+                    <ion-card-header>
+                        <h4>Produits en Stick</h4>
+                    </ion-card-header>
+                    <ion-card-content>
+                        <ion-row *ngFor="let prod of panierService.produits">
+                            <ion-col>{{prod.nomProduit}}</ion-col>
+                            <ion-col>
+                                Quantité: {{prod.quantite}}
+                            </ion-col>
+                            <ion-col>
+                                <button (click)="addCommande(prod)">
+                                    <ion-icon name="add-circle"></ion-icon>
+                                </button>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card-content>
+                </ion-card>
             </ion-grid>
             <ion-grid>
                 <ion-card>
                     <ion-card-header>
-                        Commande n# {{commandNumber}}
+                        <h1>Commande n# {{commandNumber}}</h1>
                     </ion-card-header>
                     <ion-card-content>
                         <ion-grid *ngFor="let cmd of getCommandLines()">
-                            <ion-row *ngIf="renderProdPanier(cmd.produit)">
+                            <ion-row *ngIf="renderProdPanier(cmd)">
                                 <ion-col>
                                     <ion-row>
                                         <ion-col>
-                                            <div>
+                                            <div style="color: #771d19; font-family: 'Arial Black'; font-size: 1em">
                                                 {{cmd.produit.nomProduit}}
                                             </div>
                                         </ion-col>
                                         <ion-col>
-                                            <div>
-                                                Prix: {{cmd.produit.prix}}
-                                            </div>
-                                        </ion-col>
-                                        <ion-col>
-                                            <div>
+                                            <div style="font-family: 'Franklin Gothic Heavy'">
                                                 Quantite: {{cmd.quantite}}
                                             </div>
                                         </ion-col>
                                     </ion-row>
                                     <ion-row>
-                                        <ion-col>
+                                        <ion-col text-center style="font-family: 'Franklin Gothic Heavy'">
                                             <div>
-                                                <ion-row>
-                                                    <ion-col>
-                                                        <div row>
-                                                            <button (click)="updatePanier('ajouter', cmd)">
-                                                                <ion-icon name="add"></ion-icon>
-                                                            </button>
-                                                            <button (click)="updatePanier('enlever', cmd)">
-                                                                <ion-icon name="remove"></ion-icon>
-                                                            </button>
-                                                            <button (click)="updatePanier('enleverDuPanier', cmd)">
-                                                                <ion-icon name="trash"></ion-icon>
-                                                            </button>
-                                                        </div>
-                                                    </ion-col>
-                                                </ion-row>
+                                                Prix: {{cmd.produit.prix}}
                                             </div>
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col>
+                                            <ion-row>
+                                                <ion-col>
+                                                    <div row>
+                                                        <button (click)="updatePanier('ajouter', cmd)">
+                                                            <ion-icon name="add"></ion-icon>
+                                                        </button>
+                                                        <button (click)="updatePanier('enlever', cmd)">
+                                                            <ion-icon name="remove"></ion-icon>
+                                                        </button>
+                                                        <button (click)="updatePanier('enleverDuPanier', cmd)">
+                                                            <ion-icon name="trash"></ion-icon>
+                                                        </button>
+                                                    </div>
+                                                </ion-col>
+                                            </ion-row>
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
                             </ion-row>
                         </ion-grid>
-                        <ion-button (click)="checkoutcommand()">Checkout</ion-button>
+                        <ion-item style="font-family: 'Comic Sans MS'">
+                            <h2>Montant: {{subtotal}}</h2>
+                        </ion-item>
+                        <ion-button (click)="completeOrder()">Complete</ion-button>
                     </ion-card-content>
                 </ion-card>
             </ion-grid>

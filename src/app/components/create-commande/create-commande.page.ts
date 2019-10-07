@@ -3,11 +3,9 @@ import {ModalController, NavParams, ToastController} from '@ionic/angular';
 import {Produit} from '../../models/produit';
 import {LigneCommande} from '../../models/ligne-commande';
 import {PanierService} from '../../services/panier.service';
-import {PanierTransactionService} from '../../services/panier-transaction.service';
 import {Table} from '../../models/table';
-import {ProduitPanier} from '../../models/produit-panier';
-import {PredefinedColors} from '@ionic/core';
 import {ProduitService} from '../../services/produit.service';
+import {Commande} from '../../models/commande';
 
 @Component({
     selector: 'app-create-commande',
@@ -17,17 +15,21 @@ import {ProduitService} from '../../services/produit.service';
 export class CreateCommandePage implements OnInit {
     table: Table;
     commandNumber: number;
+    subtotal: number = 0;
+    commande: Commande;
 
     constructor(public panierService: PanierService, public modalController: ModalController,
-                private panierTransactionService: PanierTransactionService, public produitService: ProduitService,
+                public produitService: ProduitService,
                 public navParams: NavParams, public toastController: ToastController) {
         this.table = this.navParams.get('table');
+        this.commande = new Commande();
     }
 
     ngOnInit() {
         this.getCommandLines();
         this.getExistingPanier();
         this.getProduits();
+
     }
 
     public getCommandLines() {
@@ -51,8 +53,10 @@ export class CreateCommandePage implements OnInit {
         await this.panierService.getCommandeTable(this.table).subscribe(res => {
             console.log(res);
             this.panierService.ligneCommandes = res as LigneCommande[];
-            if (this.panierService.ligneCommandes.length > 0) {
-                this.commandNumber = this.panierService.ligneCommandes[0].commande.numCmd;
+            if (this.panierService.ligneCommandes.length > 0 && this.panierService.ligneCommandes[0].commande.complete === false) {
+                this.commande = this.panierService.ligneCommandes[0].commande;
+                this.commandNumber = this.commande.numCmd;
+                this.getSubTotal(this.panierService.ligneCommandes);
                 for (const ldc of this.panierService.ligneCommandes) {
                     if (ldc.commande.complete === false) {
                         for (const prod of this.panierService.produits) {
@@ -80,29 +84,72 @@ export class CreateCommandePage implements OnInit {
             ligneCommande.quantite = 1;
             produit.quantite--;
             ligneCommande.table = this.table;
-            await this.panierService.updatePanier('ajouter', ligneCommande);
+            this.panierService.ajouter(this.panierService.panier, ligneCommande);
+            this.getSubTotal(this.getCommandLines());
+            this.checkoutcommand(false);
         } else if (produit.quantite < 0) {
             this.presentToast('Produit fini en stock');
         }
     }
 
     public updatePanier(operation, ligneCommande: LigneCommande) {
-        if (ligneCommande.produit.quantite > 0) {
-            this.panierService.updatePanier(operation, ligneCommande);
-            if (operation === 'enleverDuPanier') {
-                this.panierService.updateCommandLine(this.getCommandLines(), ligneCommande, this.table, this.commandNumber);
-            }
-        } else {
-            this.presentToast('Produit fini en stock');
+        switch (operation) {
+            case 'ajouter':
+                if (ligneCommande.produit.quantite > 0) {
+                    this.panierService.ajouter(this.panierService.panier, ligneCommande);
+                    // for(let ldc of this.getCommandLines()){
+                    //     if(ldc.produit.id === ligneCommande.produit.id) {
+                    //         if (ligneCommande.commande) {
+                    //             this.commande.id = ligneCommande.commande.id;
+                    //         }
+                    //     }
+                    // }
+                    this.getSubTotal(this.getCommandLines());
+                    this.checkoutcommand(false);
+                    break;
+                } else {
+                    this.presentToast('Produit fini en stock');
+                    break;
+                }
+            case 'enlever':
+                if (ligneCommande.quantite === 1) {
+                    this.presentToast('Produit retiré de la commande');
+                }
+                this.panierService.enlever(this.panierService.panier, ligneCommande);
+                this.getSubTotal(this.getCommandLines());
+                this.checkoutcommand(false);
+                break;
+            case 'vider':
+                this.panierService.supprimer(this.panierService.panier, ligneCommande);
+                break;
+            case 'enleverDuPanier':
+                // this.panierService.updateCommandLine(this.getCommandLines(), ligneCommande, this.table, this.commandNumber);
+                this.panierService.panier.delete(ligneCommande.produit.id);
+                this.getSubTotal(this.getCommandLines());
+
+                this.checkoutcommand(false);
+                break;
+            default:
+                break;
         }
     }
 
-    renderProdPanier(produit: Produit) {
-        return produit.quantite > 0;
+    renderProdPanier(ldc: LigneCommande) {
+        return ldc.quantite > 0;
     }
 
-    async checkoutcommand() {
-        this.panierService.checkoutCommand(this.getCommandLines(), this.table, this.commandNumber);
+    async checkoutcommand(complete) {
+        this.commande.complete = complete;
+        this.commande.dateLivraison = new Date();
+        this.commande.montant = this.subtotal;
+        this.commande.numCmd = this.commandNumber;
+        this.panierService.checkoutCommand(this.getCommandLines(), this.commande).subscribe(res=>{
+            console.log(this.commande = res as Commande);
+        });;
+    }
+
+    async completeOrder() {
+        this.checkoutcommand(true);
     }
 
     async presentToast(msg) {
@@ -112,11 +159,19 @@ export class CreateCommandePage implements OnInit {
             position: 'middle',
             color: 'transparent'
         });
-        toast.present();
+        await toast.present();
     }
 
     getRandomInt() {
         return Math.floor(Math.random() * Math.floor(30000));
     }
 
+    public getSubTotal(ligneCommandes: LigneCommande[]) {
+        this.subtotal = 0;
+        if (ligneCommandes != null) {
+            for (const p of ligneCommandes) {
+                this.subtotal += p.quantite * p.produit.prix;
+            }
+        }
+    }
 }

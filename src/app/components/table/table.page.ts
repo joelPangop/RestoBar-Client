@@ -45,7 +45,7 @@ export class TablePage implements OnInit {
     public getTableStatus(table: Table) {
         this.panierService.getCommandeTable(table).subscribe(res => {
             let ldc = res as LigneCommande[];
-            if (ldc.length > 0) {
+            if (ldc.length > 0 && ldc[0].commande.complete == false) {
                 table.status = TableStatus.BUSY;
             }else{
                 table.status = TableStatus.FREE;
@@ -56,6 +56,7 @@ export class TablePage implements OnInit {
     async createCommand(table: Table) {
         const modal = await this.modalController.create({
             component: CreateCommandePage,
+            cssClass: 'my-custom-modal-css',
             componentProps: {
                 produits: this.produitService.produits,
                 table: table as Table

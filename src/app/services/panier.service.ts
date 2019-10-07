@@ -56,6 +56,7 @@ export class PanierService {
             this.produits.forEach(e => {
                 if (e.nomProduit === ligneCmd.produit.nomProduit) {
                     e.quantite--;
+                    ligneCmd.produit.quantite--;
                 }
             });
         }
@@ -73,6 +74,7 @@ export class PanierService {
                     this.produits.forEach(e => {
                         if (e.nomProduit === ligneCmd.produit.nomProduit) {
                             e.quantite++;
+                            ligneCmd.produit.quantite++;
                         }
                     });
                 }
@@ -89,21 +91,22 @@ export class PanierService {
         }
     }
 
-    checkoutCommand(panier: LigneCommande[], table: Table, commandNumber: number) {
-        let totalMontant = this.panierTransactionService.getSubTotal(panier);
-        let commande = new Commande();
-        commande.complete = false;
-        commande.dateLivraison = new Date();
-        commande.montant = totalMontant;
-        commande.numCmd = commandNumber;
-        return this.http.post<Commande>(this.URL + '?panier=' + JSON.stringify(panier), commande).pipe(
-            tap(async (res: Commande) => {
-                console.log(res);
-                table.status = TableStatus.BUSY;
-            })
-        ).subscribe(res => {
-            console.log(res);
-        });
+    checkoutCommand(panier: LigneCommande[], commande: Commande) {
+        if(commande.id !== undefined){
+            let url: string = this.URL +`/${commande.id}`+"?panier="+JSON.stringify(panier);
+            return this.http.put<Commande>(url, commande).pipe(
+                tap(async (res: Commande) => {
+                    console.log(res);
+                })
+            )
+        } else {
+            let url: string = this.URL +"?panier="+JSON.stringify(panier);
+            return this.http.post<Commande>(url, commande).pipe(
+                tap(async (res: Commande) => {
+                    console.log(res);
+                })
+            )
+        }
     }
 
     public getCommandeTable(table: Table) {
@@ -127,7 +130,6 @@ export class PanierService {
 
     public updateCommandLine(panier: LigneCommande[], ligneCommande: LigneCommande, table: Table, commandNumber: number) {
         if (ligneCommande.commande !== undefined) {
-            let totalMontant = this.panierTransactionService.getSubTotal(panier);
             if (panier.length > 0) {
                 return this.http.put<Commande>(this.URL + `/${ligneCommande.commande.id}` + '?panier=' + JSON.stringify(panier), ligneCommande.commande).pipe(
                     tap(async (res: Commande) => {
@@ -137,11 +139,21 @@ export class PanierService {
                     console.log(res);
                 });
             } else {
-                return this.http.delete<LigneCommande>(this.URL + `/${ligneCommande.commande.id}`)
+                return this.http.delete<LigneCommande>(this.URL +"/delete"+ `/${ligneCommande.id}`)
                     .subscribe(res => {
                         console.log(res);
                     });
             }
         }
+    }
+
+    public getSubTotal(ligneCommandes: LigneCommande[]) {
+        let subtotal: number = 0;
+        if (ligneCommandes != null) {
+            for (const p of ligneCommandes) {
+                subtotal += p.produit.quantite * p.produit.prix;
+            }
+        }
+        return subtotal;
     }
 }
