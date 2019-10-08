@@ -20,11 +20,13 @@ export class PanierService {
     panier: Map<number, LigneCommande>;
     ligneCommandes: LigneCommande[];
     produits: Produit[] = [];
+    table: Table;
 
     constructor(private http: HttpClient, private produitService: ProduitService, private panierTransactionService: PanierTransactionService) {
         this.panier = new Map<number, LigneCommande>();
         this.ligneCommandes = new Array();
         this.produits = [];
+        this.table = new Table();
     }
 
     public updatePanier(operation, ligneCmd: LigneCommande) {

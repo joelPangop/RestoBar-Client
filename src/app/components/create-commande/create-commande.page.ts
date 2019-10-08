@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {ModalController, NavParams, ToastController} from '@ionic/angular';
+import {LoadingController, ModalController, NavParams, ToastController} from '@ionic/angular';
 import {Produit} from '../../models/produit';
 import {LigneCommande} from '../../models/ligne-commande';
 import {PanierService} from '../../services/panier.service';
 import {Table} from '../../models/table';
 import {ProduitService} from '../../services/produit.service';
 import {Commande} from '../../models/commande';
+import {TableService} from '../../services/table.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-create-commande',
@@ -20,6 +22,7 @@ export class CreateCommandePage implements OnInit {
 
     constructor(public panierService: PanierService, public modalController: ModalController,
                 public produitService: ProduitService,
+                public tableService: TableService, private router: Router, public loadingController: LoadingController,
                 public navParams: NavParams, public toastController: ToastController) {
         this.table = this.navParams.get('table');
         this.commande = new Commande();
