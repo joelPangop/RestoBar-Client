@@ -150,7 +150,9 @@ export class TablePage implements OnInit {
             produit.quantite--;
             ligneCommande.table = this.table;
             // this.table.status = TableStatus.BUSY;
-            this.commandNumber = this.getRandomInt();
+            if (this.commandNumber === undefined) {
+                this.commandNumber = this.getRandomInt();
+            }
             this.panierService.ajouter(this.panierService.panier, ligneCommande);
             this.getSubTotal(this.getCommandLines());
             this.checkoutcommand(false).then(res => {

@@ -10,6 +10,8 @@ const routes: Routes = [
   { path: 'user', loadChildren: './components/user/user.module#UserPageModule' },
   { path: 'edituser/:id', loadChildren: './components/edituser/edituser.module#EdituserPageModule' },
   { path: 'create-commande', loadChildren: './components/create-commande/create-commande.module#CreateCommandePageModule' },
+  { path: 'fournisseur', loadChildren: './components/fournisseur/fournisseur.module#FournisseurPageModule' },
+  { path: 'depense', loadChildren: './components/depense/depense.module#DepensePageModule' },
 ];
 
 @NgModule({

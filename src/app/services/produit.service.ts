@@ -9,9 +9,11 @@ export class ProduitService {
 
     URL_API = 'http://localhost:4000/produit';
     public produits: Produit[];
+    public produit: Produit;
 
     constructor(private http: HttpClient) {
         this.produits = [];
+        this.produit = new Produit();
     }
 
     getProduitById(id: number) {
@@ -19,7 +21,19 @@ export class ProduitService {
         return this.http.get(url);
     }
 
-    getAll(){
+    getAll() {
         return this.http.get(this.URL_API);
+    }
+
+    createProduit(produit: Produit) {
+        return this.http.post(this.URL_API, produit);
+    }
+
+     editProduit(produit: Produit) {
+        return this.http.put(this.URL_API + `/${produit.id}`, produit);
+    }
+
+    deleteProduit(produit: Produit) {
+        return this.http.delete(this.URL_API + "?produit="+JSON.stringify(produit));
     }
 }

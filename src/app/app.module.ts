@@ -13,6 +13,8 @@ import {CreateCommandePageModule} from './components/create-commande/create-comm
 import {CreateCommandePage} from './components/create-commande/create-commande.page';
 import {TablePageModule} from './components/table/table.module';
 import {IonicStorageModule} from '@ionic/storage';
+import {FormsModule} from '@angular/forms';
+import {IonicSelectableModule} from 'ionic-selectable';
 
 @NgModule({
     declarations: [AppComponent],
@@ -22,7 +24,9 @@ import {IonicStorageModule} from '@ionic/storage';
         HttpClientModule,
         AppRoutingModule,
         TablePageModule,
+        FormsModule,
         IonicStorageModule.forRoot(),
+        IonicSelectableModule,
         CreateCommandePageModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [

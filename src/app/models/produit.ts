@@ -1,14 +1,14 @@
-import { LigneCommande } from './ligne-commande';
+import {TypeProduit} from './type-produit';
+import {LigneCommande} from './ligne-commande';
 
 export class Produit {
 
-    constructor(id = 0, nomProduit = '', description = '', quantite = 0, prix = 0, type = '') {
-        this.id = id;
-        this.nomProduit = nomProduit;
-        this.description = description;
-        this.quantite = quantite;
-        this.prix = prix;
-        this.type = type;
+    constructor() {
+        this.nomProduit = '';
+        this.description = '';
+        this.quantite = 0;
+        this.prix = 0;
+        this.type = TypeProduit.LIQUEUR
     }
 
     id: number;
@@ -17,4 +17,5 @@ export class Produit {
     type: string;
     quantite: number;
     prix: number;
+    ligneCommandes: LigneCommande[];
 }
