@@ -8,6 +8,8 @@ import {Produit} from '../models/produit';
 export class ProduitService {
 
     URL_API = 'http://localhost:4000/produit';
+    URL_CMD_PROD_API = 'http://localhost:4000/commande/produit';
+
     public produits: Produit[];
     public produit: Produit;
 
@@ -35,5 +37,10 @@ export class ProduitService {
 
     deleteProduit(produit: Produit) {
         return this.http.delete(this.URL_API + "?produit="+JSON.stringify(produit));
+    }
+
+    findCommandeByProduit(produit: Produit){
+        const url = this.URL_CMD_PROD_API + '/' + produit.id;
+        return this.http.get(url);
     }
 }

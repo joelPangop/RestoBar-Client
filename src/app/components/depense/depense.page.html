@@ -1,9 +1,176 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>depense</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>depense</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <ion-grid fixed style="width: inherit">
+        <ion-row>
+            <ion-col size="7">
+                <ion-grid fixed>
+                    <ion-card>
+                        <form #depenseForm="ngForm">
+                            <input ion-input type="hidden" name="id" #id="ngModel"
+                                   [(ngModel)]="depenseService.selectedDepense.id"/>
+                            <ion-row>
+                                <ion-col>
+                                    <ion-label style="font-family: 'Franklin Gothic Heavy'">
+                                        Type Depense:
+                                    </ion-label>&nbsp;
+                                    <select [(ngModel)]="typeDepense"
+                                            style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                            [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let t of options" [value]="t">
+                                            {{t}}
+                                        </option>
+                                    </select>
+                                    <ion-card>
+                                        <ion-grid *ngIf="typeDepense === 'ACHAT'" fixed>
+                                            <ion-row>
+                                                <ion-col size="4">
+                                                    Fournisseur
+                                                </ion-col>
+                                                <ion-col size="4">
+                                                    Produit
+                                                </ion-col>
+                                            </ion-row>
+                                            <ion-row>
+                                                <ion-col size="4">
+                                                    <select [(ngModel)]="depenseService.selectedDepense.fournisseur"
+                                                            (change)="getProduitsByFournisseur()" [compareWith]="compareFunction"
+                                                            style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                                            [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let fourn of fournisseurService.fournisseurs"
+                                                                [ngValue]="fourn">
+                                                            {{fourn.nom}}
+                                                        </option>
+                                                    </select>
+                                                    <ion-item>
+                                                        <ion-textarea name="description" #name="ngModel"
+                                                                      [(ngModel)]="depenseService.selectedDepense.description"
+                                                                      placeholder="Description">
+                                                        </ion-textarea>
+                                                    </ion-item>
+                                                </ion-col>
+                                                <ion-col size="8">
+                                                    <ion-card>
+                                                        <ion-button (click)="addProduit()">
+                                                            <ion-icon name="add"></ion-icon>
+                                                        </ion-button>
+                                                        <ion-row>
+                                                            <ion-col size="5">
+                                                                Produit
+                                                            </ion-col>
+                                                            <ion-col size="3">
+                                                                Prix
+                                                            </ion-col>
+                                                            <ion-col size="2">
+                                                                Quantite
+                                                            </ion-col>
+                                                            <ion-col size="2">
+                                                                Montant
+                                                            </ion-col>
+                                                        </ion-row>
+                                                        <ion-row *ngFor="let prod of achatFournisseurs">
+                                                            <ion-col size="5">
+                                                                <select [(ngModel)]="prod.produit" [compareWith]="compareProdFunction"
+                                                                        (change)="getProduitsByFournisseur()"
+                                                                        style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                                                        [ngModelOptions]="{standalone: true}">
+                                                                    <option *ngFor="let prd of produits"
+                                                                            [ngValue]="prd">
+                                                                        {{prd.nomProduit}}
+                                                                    </option>
+                                                                </select>
+                                                            </ion-col>
+                                                            <ion-col size="3">
+                                                                <ion-label>{{prod.produit.prix}}</ion-label>
+                                                            </ion-col>
+                                                            <ion-col size="2">
+                                                                <ion-input name="quantite" #name="ngModel"
+                                                                           (keydown.enter)="getMontant(prod)"
+                                                                           [(ngModel)]="prod.quantite"
+                                                                           [ngModelOptions]="{standalone: true}">
+                                                                </ion-input>
+                                                            </ion-col>
+                                                            <ion-col size="2">
+                                                                <ion-label>{{prod.montant}}</ion-label>
+                                                            </ion-col>
+                                                        </ion-row>
+                                                        <ion-row>
+                                                            <ion-col size="3">
 
+                                                            </ion-col>
+                                                            <ion-col size="5">
+                                                                Total
+                                                            </ion-col>
+                                                            <ion-col size="2">
+                                                                <ion-label>{{prod.quantite}}</ion-label>
+                                                            </ion-col>
+                                                            <ion-col size="2">
+                                                                <ion-label>{{prod.montant}}</ion-label>
+                                                            </ion-col>
+                                                        </ion-row>
+                                                        <ion-row>
+                                                            <ion-button (click)="createDepense(depenseForm)">
+                                                                Ajouter {{this.typeDepense}}
+                                                            </ion-button>
+                                                        </ion-row>
+                                                    </ion-card>
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-grid>
+                                    </ion-card>
+                                </ion-col>
+                            </ion-row>
+                        </form>
+                    </ion-card>
+                </ion-grid>
+            </ion-col>
+            <ion-col size="5">
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="3">
+                            Numero Depense
+                        </ion-col>
+                        <ion-col size="2">
+                            Type Depense
+                        </ion-col>
+                        <ion-col size="2">
+                            Quantite
+                        </ion-col>
+                        <ion-col size="2">
+                            Montant
+                        </ion-col>
+                        <ion-col size="3">
+                            Operations
+                        </ion-col>
+                    </ion-row>
+                    <ion-row *ngFor="let dep of this.depenseService.depenses">
+                        <ion-col size="3">{{dep.numDepense}}</ion-col>
+                        <ion-col size="2">{{dep.typeDepense}}</ion-col>
+                        <ion-col size="2">{{dep.quantite}}</ion-col>
+                        <ion-col size="2">{{dep.montant}}</ion-col>
+                        <ion-col size="3">
+                            <ion-grid fixed>
+                                <ion-row>
+                                    <ion-col size="3" ion-align-self-start>
+                                        <button (click)="getDepense(dep)">
+                                            <ion-icon name="eye"></ion-icon>
+                                        </button>
+                                    </ion-col>
+                                    <ion-col size="3" ion-align-self-center>
+                                        <button (click)="deleteDepense(dep)">
+                                            <ion-icon name="trash"></ion-icon>
+                                        </button>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>

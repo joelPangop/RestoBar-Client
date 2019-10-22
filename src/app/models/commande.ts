@@ -1,6 +1,3 @@
-import { Table } from './table';
-import { LigneCommande } from './ligne-commande';
-
 export class Commande {
 
     constructor() {

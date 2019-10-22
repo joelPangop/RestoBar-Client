@@ -70,21 +70,23 @@ export class FournisseurPage implements OnInit {
     }
 
     deleteProduit(produit: Produit){
-        if(produit.ligneCommandes){
-            this.presentToast("Produit assigné à une ou plusieurs commandes").then(res => console.log(res));
-        }else {
-             this.produitService.deleteProduit(produit).subscribe(res => {
-                console.log(res);
-                let arr = this.produitService.produits;
-                for (let i = 0; i < arr.length; i++) {
-                    if (arr[i].id === produit.id) {
-                        arr.splice(i, 1);
-                        i--;
+        this.produitService.findCommandeByProduit(produit).subscribe(res =>{
+            if(res){
+                this.presentToast("Produit assigné à une ou plusieurs commandes");
+            }else {
+                this.produitService.deleteProduit(produit).subscribe(res => {
+                    console.log(res);
+                    let arr = this.produitService.produits;
+                    for (let i = 0; i < arr.length; i++) {
+                        if (arr[i].id === produit.id) {
+                            arr.splice(i, 1);
+                            i--;
+                        }
                     }
-                }
-                this.resetProduit();
-            });
-        }
+                    this.resetProduit();
+                });
+            }
+        });
     }
 
     addFournisseur(form: NgForm) {
