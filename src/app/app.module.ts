@@ -1,6 +1,6 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {RouteReuseStrategy} from '@angular/router';
+import {RouteReuseStrategy, Routes} from '@angular/router';
 
 import {HttpClientModule} from '@angular/common/http';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
@@ -15,6 +15,22 @@ import {TablePageModule} from './components/table/table.module';
 import {IonicStorageModule} from '@ionic/storage';
 import {FormsModule} from '@angular/forms';
 import {IonicSelectableModule} from 'ionic-selectable';
+import { DatePipe } from '@angular/common';
+
+const routes: Routes = [
+    {
+      path: '',
+      component: AppComponent,
+      children: [
+        { path: 'table', loadChildren: '../table/table.module#TablePageModule' },
+        { path: 'produit', loadChildren: '../produit/produit.module#ProduitPageModule' },
+        { path: 'commande', loadChildren: '../commande/commande.module#CommandePageModule' },
+        { path: 'user', loadChildren: '../user/user.module#UserPageModule' },
+        { path: 'fournisseur', loadChildren: '../fournisseur/fournisseur.module#FournisseurPageModule' },
+        { path: 'depense', loadChildren: '../depense/depense.module#DepensePageModule' }
+      ]
+    }
+  ];
 
 @NgModule({
     declarations: [AppComponent],
@@ -32,6 +48,7 @@ import {IonicSelectableModule} from 'ionic-selectable';
     providers: [
         StatusBar,
         SplashScreen,
+        DatePipe,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
     ],
     bootstrap: [AppComponent]

@@ -1,26 +1,56 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>depense</ion-title>
+        <ion-title>Depenses</ion-title>
     </ion-toolbar>
+    <ion-toolbar>
+            <ion-row class="rowtime">
+              <ion-col size=4>
+                Debut
+              </ion-col>
+              <ion-col size=4>
+                Fin
+              </ion-col>
+              <ion-col size=4>
+        
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size=4>
+                <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD" [(ngModel)]="startTime">
+                </ion-datetime>
+              </ion-col>
+              <ion-col size=4>
+                <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD" [(ngModel)]="endTime">
+                </ion-datetime>
+              </ion-col>
+              <ion-col size=4>
+                <ion-button (click)="getAllBytime()">
+                    <ion-icon name="search">
+                  </ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+        
+          </ion-toolbar>
 </ion-header>
 
 <ion-content>
     <ion-grid fixed style="width: inherit">
         <ion-row>
-            <ion-col size="7">
+            <ion-col size="6">
                 <ion-grid fixed>
                     <ion-card>
                         <form #depenseForm="ngForm">
                             <input ion-input type="hidden" name="id" #id="ngModel"
-                                   [(ngModel)]="depenseService.selectedDepense.id"/>
+                                [(ngModel)]="depenseService.selectedDepense.id" />
                             <ion-row>
                                 <ion-col>
                                     <ion-label style="font-family: 'Franklin Gothic Heavy'">
                                         Type Depense:
                                     </ion-label>&nbsp;
                                     <select [(ngModel)]="typeDepense"
-                                            style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
-                                            [ngModelOptions]="{standalone: true}">
+                                        style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                        [ngModelOptions]="{standalone: true}">
                                         <option *ngFor="let t of options" [value]="t">
                                             {{t}}
                                         </option>
@@ -38,18 +68,19 @@
                                             <ion-row>
                                                 <ion-col size="4">
                                                     <select [(ngModel)]="depenseService.selectedDepense.fournisseur"
-                                                            (change)="getProduitsByFournisseur()" [compareWith]="compareFunction"
-                                                            style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
-                                                            [ngModelOptions]="{standalone: true}">
+                                                        (change)="getProduitsByFournisseur()"
+                                                        [compareWith]="compareFunction"
+                                                        style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                                        [ngModelOptions]="{standalone: true}">
                                                         <option *ngFor="let fourn of fournisseurService.fournisseurs"
-                                                                [ngValue]="fourn">
+                                                            [ngValue]="fourn">
                                                             {{fourn.nom}}
                                                         </option>
                                                     </select>
                                                     <ion-item>
                                                         <ion-textarea name="description" #name="ngModel"
-                                                                      [(ngModel)]="depenseService.selectedDepense.description"
-                                                                      placeholder="Description">
+                                                            [(ngModel)]="depenseService.selectedDepense.description"
+                                                            placeholder="Description">
                                                         </ion-textarea>
                                                     </ion-item>
                                                 </ion-col>
@@ -74,12 +105,13 @@
                                                         </ion-row>
                                                         <ion-row *ngFor="let prod of achatFournisseurs">
                                                             <ion-col size="5">
-                                                                <select [(ngModel)]="prod.produit" [compareWith]="compareProdFunction"
-                                                                        (change)="getProduitsByFournisseur()"
-                                                                        style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
-                                                                        [ngModelOptions]="{standalone: true}">
+                                                                <select [(ngModel)]="prod.produit"
+                                                                    [compareWith]="compareProdFunction"
+                                                                    (change)="getProduitsByFournisseur()"
+                                                                    style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                                                    [ngModelOptions]="{standalone: true}">
                                                                     <option *ngFor="let prd of produits"
-                                                                            [ngValue]="prd">
+                                                                        [ngValue]="prd">
                                                                         {{prd.nomProduit}}
                                                                     </option>
                                                                 </select>
@@ -89,9 +121,9 @@
                                                             </ion-col>
                                                             <ion-col size="2">
                                                                 <ion-input name="quantite" #name="ngModel"
-                                                                           (keydown.enter)="getMontant(prod)"
-                                                                           [(ngModel)]="prod.quantite"
-                                                                           [ngModelOptions]="{standalone: true}">
+                                                                    (keydown.enter)="getMontant(prod)"
+                                                                    [(ngModel)]="prod.quantite"
+                                                                    [ngModelOptions]="{standalone: true}">
                                                                 </ion-input>
                                                             </ion-col>
                                                             <ion-col size="2">
@@ -106,18 +138,111 @@
                                                                 Total
                                                             </ion-col>
                                                             <ion-col size="2">
-                                                                <ion-label>{{prod.quantite}}</ion-label>
+                                                                <ion-label>{{quantiteTotale}}</ion-label>
                                                             </ion-col>
                                                             <ion-col size="2">
-                                                                <ion-label>{{prod.montant}}</ion-label>
+                                                                <ion-label>{{montantTotale}}</ion-label>
                                                             </ion-col>
                                                         </ion-row>
                                                         <ion-row>
-                                                            <ion-button (click)="createDepense(depenseForm)">
-                                                                Ajouter {{this.typeDepense}}
-                                                            </ion-button>
+                                                            <ion-col size=4>
+                                                                <ion-button (click)="createDepense(depenseForm)">
+                                                                    Save {{this.typeDepense}}
+                                                                </ion-button>
+                                                            </ion-col>
+                                                            <ion-col size=4>
+                                                                <ion-button (click)="resetForm(depenseForm)">
+                                                                    Clear
+                                                                </ion-button>
+                                                            </ion-col>
                                                         </ion-row>
                                                     </ion-card>
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-grid>
+                                        <ion-grid *ngIf="typeDepense === 'SALAIRE'" fixed>
+                                            <ion-row>
+                                                <ion-col size="4">
+                                                    Employé
+                                                </ion-col>
+                                                <ion-col size="4">
+                                                    Salaire
+                                                </ion-col>
+                                                <ion-col size="4">
+
+                                                </ion-col>
+                                            </ion-row>
+                                            <ion-row>
+                                                <ion-col size=4>
+                                                    <select [(ngModel)]="depenseService.selectedDepense.user"
+                                                        (change)="getEmployeSalaire()"
+                                                        [compareWith]="compareUserFunction"
+                                                        style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let usr of userService.users" [ngValue]="usr">
+                                                            {{usr.username}}
+                                                        </option>
+                                                    </select>
+                                                </ion-col>
+                                                <ion-col size=4>
+                                                    <ion-label>
+                                                        {{depenseService.selectedDepense.user.salaire}}
+                                                    </ion-label>
+                                                </ion-col>
+                                                <ion-col size="4">
+                                                    <ion-row>
+                                                        <ion-col>
+                                                            <ion-button (click)="createDepense(depenseForm)">
+                                                                Save {{this.typeDepense}}
+                                                            </ion-button>
+                                                        </ion-col>
+                                                        <ion-col>
+                                                            <ion-button (click)="resetForm(depenseForm)">
+                                                                Clear
+                                                            </ion-button>
+                                                        </ion-col>
+                                                    </ion-row>
+                                                </ion-col>
+                                            </ion-row>
+                                        </ion-grid>
+                                        <ion-grid *ngIf="typeDepense === 'DIVERS'" fixed>
+                                            <ion-row>
+                                                <ion-col size="5">
+                                                    Description
+                                                </ion-col>
+                                                <ion-col size="4">
+                                                    Montant
+                                                </ion-col>
+                                                <ion-col size="3">
+
+                                                </ion-col>
+                                            </ion-row>
+                                            <ion-row>
+                                                <ion-col size="5">
+                                                    <ion-textarea name="description" #name="ngModel"
+                                                        [(ngModel)]="depenseService.selectedDepense.description"
+                                                        placeholder="Description">
+                                                    </ion-textarea>
+                                                </ion-col>
+                                                <ion-col size="3">
+                                                    <ion-textarea name="montant" #name="ngModel"
+                                                        [(ngModel)]="depenseService.selectedDepense.montant"
+                                                        placeholder="Montant">
+                                                    </ion-textarea>
+                                                </ion-col>
+                                                <ion-col size="4">
+                                                    <ion-row>
+                                                        <ion-col>
+                                                            <ion-button (click)="createDepense(depenseForm)">
+                                                                Save {{this.typeDepense}}
+                                                            </ion-button>
+                                                        </ion-col>
+                                                        <ion-col>
+                                                            <ion-button (click)="resetForm(depenseForm)">
+                                                                Clear
+                                                            </ion-button>
+                                                        </ion-col>
+                                                    </ion-row>
                                                 </ion-col>
                                             </ion-row>
                                         </ion-grid>
@@ -128,30 +253,34 @@
                     </ion-card>
                 </ion-grid>
             </ion-col>
-            <ion-col size="5">
+            <ion-col size="6">
                 <ion-grid>
                     <ion-row>
-                        <ion-col size="3">
+                        <ion-col size="2">
                             Numero Depense
                         </ion-col>
                         <ion-col size="2">
                             Type Depense
                         </ion-col>
-                        <ion-col size="2">
+                        <ion-col size="1">
                             Quantite
                         </ion-col>
                         <ion-col size="2">
                             Montant
+                        </ion-col>
+                        <ion-col size="2">
+                            Date
                         </ion-col>
                         <ion-col size="3">
                             Operations
                         </ion-col>
                     </ion-row>
                     <ion-row *ngFor="let dep of this.depenseService.depenses">
-                        <ion-col size="3">{{dep.numDepense}}</ion-col>
+                        <ion-col size="2">{{dep.numDepense}}</ion-col>
                         <ion-col size="2">{{dep.typeDepense}}</ion-col>
-                        <ion-col size="2">{{dep.quantite}}</ion-col>
+                        <ion-col size="1">{{dep.quantite}}</ion-col>
                         <ion-col size="2">{{dep.montant}}</ion-col>
+                        <ion-col size="2">{{dep.dateDepense}}</ion-col>
                         <ion-col size="3">
                             <ion-grid fixed>
                                 <ion-row>
@@ -173,4 +302,5 @@
             </ion-col>
         </ion-row>
     </ion-grid>
+
 </ion-content>

@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Fournisseur} from '../models/fournisseur';
-import {Depense} from '../models/depense';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Fournisseur } from '../models/fournisseur';
+import { Depense } from '../models/depense';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -18,23 +18,28 @@ export class DepenseService {
         this.fournisseurs = [];
     }
 
-    getDepenses(typedepense: string) {
-        return this.http.get(this.URL_API + `/${typedepense}`);
+    getDepenses() {
+        return this.http.get(this.URL_API);
     }
 
-    getDepense(depense: Depense, typedepense: string) {
-        return this.http.get(this.URL_API + `/${typedepense}` + `/${depense.id}`);
+    getDepense(depense: Depense) {
+        return this.http.get(this.URL_API + `/${depense.id}`);
     }
 
     createDepense(depense: Depense) {
-        return this.http.post(this.URL_API + '?fournisseur=' + JSON.stringify(depense.fournisseur) + '?produits='+JSON.stringify(depense.produitAchats), depense);
+        return this.http.post(this.URL_API + '?fournisseur=' + JSON.stringify(depense.fournisseur) + '?produits=' + JSON.stringify(depense.produitAchats), depense);
     }
 
     updateDepense(depense: Depense, typedepense: string) {
-        return this.http.put(this.URL_API + `/${typedepense}`+ `/${depense.id}` + '?fournisseur=' + JSON.stringify(this.fournisseurs)+ '?produits='+JSON.stringify(depense.produitAchats), depense);
+        return this.http.put(this.URL_API + `/${typedepense}` + `/${depense.id}` + '?fournisseur=' + JSON.stringify(this.fournisseurs) + '?produits=' + JSON.stringify(depense.produitAchats), depense);
     }
 
-    deleteDepense(typedepense: string, depense: Depense) {
-        return this.http.delete(this.URL_API + `/${typedepense}` + `/${depense.id}`);
+    deleteDepense(depense: Depense) {
+        let url = this.URL_API + `/${depense.id}`;
+        return this.http.delete(url);
+    }
+
+    getByTime(startTime, endTime) {
+        return this.http.get(this.URL_API + "/time" + `?startTime=` + JSON.stringify(startTime) + "&endTime=" + JSON.stringify(endTime));
     }
 }

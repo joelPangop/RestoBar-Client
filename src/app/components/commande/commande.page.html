@@ -2,8 +2,68 @@
   <ion-toolbar>
     <ion-title>commande</ion-title>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-row class="rowtime">
+      <ion-col size=4>
+        Debut
+      </ion-col>
+      <ion-col size=4>
+        Fin
+      </ion-col>
+      <ion-col size=4>
+
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size=4>
+        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD" [(ngModel)]="startTime">
+        </ion-datetime>
+      </ion-col>
+      <ion-col size=4>
+        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD" [(ngModel)]="endTime">
+        </ion-datetime>
+      </ion-col>
+      <ion-col size=4>
+        <ion-button (click)="getAllBytime()">
+            <ion-icon name="search">
+          </ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size=3>
+        Numero Commande
+      </ion-col>
+      <ion-col size=3>
+        Montant
+      </ion-col>
+      <ion-col size=3>
+        Complete
+      </ion-col>
+      <ion-col size=3>
+        Date Livraison
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let cmd of this.commandeService.commandes">
+      <ion-col size=3>
+        {{cmd.numCmd}}
+      </ion-col>
+      <ion-col size=3>
+        {{cmd.montant}}
+      </ion-col>
+      <ion-col size=3>
+        {{cmd.complete}}
+      </ion-col>
+      <ion-col size=3>
+        {{cmd.dateLivraison}}
+      </ion-col>
+    </ion-row>
 
+  </ion-grid>
 </ion-content>

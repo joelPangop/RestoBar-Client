@@ -1,13 +1,16 @@
 import {TypeDepense} from './type-depense';
 import {Fournisseur} from './fournisseur';
 import {ProduitAchat} from './produit-achat';
+import { User } from './user';
 
 export class Depense {
     constructor(){
         this.typeDepense = TypeDepense.ACHAT;
         this.montant = 0;
+        this.quantite = 0;
         this.description='';
         this.produitAchats = [];
+        this.user = new User();
     }
 
     id: number;
@@ -19,4 +22,5 @@ export class Depense {
     dateDepense: Date;
     fournisseur: Fournisseur;
     produitAchats: ProduitAchat[];
+    user: User;
 }

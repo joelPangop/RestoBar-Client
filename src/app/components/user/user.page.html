@@ -1,9 +1,104 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>user</ion-title>
+    <ion-title>Utilisateur</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <form #userForm="ngForm">
+    <input ion-input type="hidden" name="id" #id="ngModel" [(ngModel)]="userService.selectedUser.id" />
+    <ion-grid fixed style="width: inherit">
+      <ion-row>
+        <ion-col size=5>
+          <ion-grid fixed>
+            <ion-card>
+              <ion-item>
+                <ion-input name="username" #name="ngModel" [(ngModel)]="userService.selectedUser.username"
+                  placeholder="Entrer le username">
+                </ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input name="password" #name="ngModel" [(ngModel)]="userService.selectedUser.password"
+                  placeholder="Entrer le password">
+                </ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input name="salaire" #name="ngModel" [(ngModel)]="userService.selectedUser.salaire"
+                  placeholder="Entrer le salaire">
+                </ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="4">
+                      <ion-button (click)="saveUser(userForm)">
+                        Enregistrer
+                        Utilisateur
+                      </ion-button>
+                    </ion-col>
+                    <ion-col size="4">
+                      <ion-button>
+                        Effacer
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+            </ion-card>
+          </ion-grid>
+        </ion-col>
+        <ion-col size=7>
+          <ion-card>
+            <ion-grid fixed>
+              <ion-row>
+                <ion-col size=3>
+                  Numero utilisateur
+                </ion-col>
+                <ion-col size=3>
+                  username
+                </ion-col>
+                <ion-col size=2>
+                  salaire
+                </ion-col>
+                <ion-col size=2>
+                  Role
+                </ion-col>
+                <ion-col size=2>
+                  Options
+                </ion-col>
+              </ion-row>
+              <ion-row *ngFor="let user of userService.users">
+                <ion-col size=3>
+                  {{user.usernumber}}
+                </ion-col>
+                <ion-col size=3>
+                  {{user.username}}
+                </ion-col>
+                <ion-col size=2>
+                  {{user.salaire}}
+                </ion-col>
+                <ion-col size=2>
+                  {{user.role}}
+                </ion-col>
+                <ion-col size=2>
+                  <ion-row>
+                    <ion-col size=3>
+                      <button (click)="getUser(user)">
+                        <ion-icon name="eye"></ion-icon>
+                      </button>
+                    </ion-col>
+                    <ion-col size=3>
+                      <button (click)="deleteUser(user)">
+                        <ion-icon name="trash"></ion-icon>
+                      </button>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
