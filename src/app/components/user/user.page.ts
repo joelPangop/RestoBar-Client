@@ -37,7 +37,7 @@ export class UserPage implements OnInit {
       message: 'Loading...'
     });
     await loading.present();
-    this.userService.getUser(user)
+    this.userService.getUser(user.id)
       .subscribe(res => {
         this.userService.selectedUser = res as User;
         loading.dismiss();

@@ -13,7 +13,7 @@ export class CommandePage implements OnInit {
   startTime: Date;
   endTime: Date;
 
-  constructor(private commandeService: CommandeService, public datepipe: DatePipe) {
+  constructor(public commandeService: CommandeService, public datepipe: DatePipe) {
     this.startTime = new Date();
     this.endTime = new Date();
    }

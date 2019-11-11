@@ -20,8 +20,8 @@ export class FournisseurPage implements OnInit {
     options: string[];
     produits: Produit[];
 
-    constructor(private fournisseurService: FournisseurService, private toastController: ToastController,
-                private produitService: ProduitService, public modalController: ModalController) {
+    constructor(public fournisseurService: FournisseurService, private toastController: ToastController,
+        public produitService: ProduitService, public modalController: ModalController) {
         this.produits = [];
     }
 

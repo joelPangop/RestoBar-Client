@@ -1,5 +1,8 @@
 <ion-header>
     <ion-toolbar>
+        <ion-buttons slot=start>
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
         <ion-title>table</ion-title>
     </ion-toolbar>
 </ion-header>
@@ -13,12 +16,12 @@
                         <ion-row>
                             <ion-col *ngFor="let table of tableService.tables" size="4">
                                 <ion-card>
-                                    <ion-item (click)="openCommande(table)">
+                                    <ion-item (click)="createCommand(table)">
                                         <div>
                                             <img src="assets/images/busyTable.jpg" *ngIf="table.status === 'BUSY'">
                                             <img src="assets/images/freeTable.jpg" *ngIf="table.status === 'FREE'">
                                             <img src="assets/images/reservedTable.jpg"
-                                                 *ngIf="table.status === 'RESERVED'">
+                                                *ngIf="table.status === 'RESERVED'">
                                         </div>
                                         <ion-grid fixed>
                                             <ion-row>
@@ -75,7 +78,8 @@
                                     <ion-card>
                                         <ion-card-header>
                                             <div>
-                                                <h5 style="color: #1e2023; font-family: 'Arial Black'">Table n# {{table.noTable}}</h5>
+                                                <h5 style="color: #1e2023; font-family: 'Arial Black'">Table n#
+                                                    {{table.noTable}}</h5>
                                                 <h1>
                                                     <ion-label>Commande n# {{commandNumber}}</ion-label>
                                                 </h1>
@@ -87,7 +91,8 @@
                                                     <ion-col>
                                                         <ion-row>
                                                             <ion-col>
-                                                                <div style="color: #771d19; font-family: 'Arial Black'; font-size: 1em">
+                                                                <div
+                                                                    style="color: #771d19; font-family: 'Arial Black'; font-size: 1em">
                                                                     {{cmd.produit.nomProduit}}
                                                                 </div>
                                                             </ion-col>
@@ -99,7 +104,7 @@
                                                         </ion-row>
                                                         <ion-row>
                                                             <ion-col text-center
-                                                                     style="font-family: 'Franklin Gothic Heavy'">
+                                                                style="font-family: 'Franklin Gothic Heavy'">
                                                                 <div>
                                                                     Prix: {{cmd.produit.prix}}
                                                                 </div>
@@ -110,13 +115,16 @@
                                                                 <ion-row>
                                                                     <ion-col>
                                                                         <div row>
-                                                                            <button (click)="updatePanier('ajouter', cmd)">
+                                                                            <button
+                                                                                (click)="updatePanier('ajouter', cmd)">
                                                                                 <ion-icon name="add"></ion-icon>
                                                                             </button>
-                                                                            <button (click)="updatePanier('enlever', cmd)">
+                                                                            <button
+                                                                                (click)="updatePanier('enlever', cmd)">
                                                                                 <ion-icon name="remove"></ion-icon>
                                                                             </button>
-                                                                            <button (click)="updatePanier('enleverDuPanier', cmd)">
+                                                                            <button
+                                                                                (click)="updatePanier('enleverDuPanier', cmd)">
                                                                                 <ion-icon name="trash"></ion-icon>
                                                                             </button>
                                                                         </div>
@@ -136,8 +144,8 @@
                                 </ion-grid>
                             </ion-row>
                             <ion-row>
-<!--                                <ion-button *ngIf="getCommandLines().length === 0">Clear Panier-->
-<!--                                </ion-button>-->
+                                <!--                                <ion-button *ngIf="getCommandLines().length === 0">Clear Panier-->
+                                <!--                                </ion-button>-->
                                 <!--                        <ion-button (click)="dismiss()">Back</ion-button>-->
                             </ion-row>
                         </ion-col>

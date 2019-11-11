@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {Router} from '@angular/router';
-import {Platform} from '@ionic/angular';
+import { Router, RouterEvent } from '@angular/router';
+import { Platform, ToastController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -8,9 +9,10 @@ import {Platform} from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  
+  constructor(private router: Router) {
 
-  constructor(private router: Router,private platform: Platform) {
-    this.router.navigateByUrl("/table");
+      // this.router.navigateByUrl("/menu");
   }
 
 }

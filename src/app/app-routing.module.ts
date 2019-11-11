@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuardService } from './services/auth-guard.service';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)},
-  { path: 'table', loadChildren: './components/table/table.module#TablePageModule' },
-  { path: 'produit', loadChildren: './components/produit/produit.module#ProduitPageModule' },
-  { path: 'commande', loadChildren: './components/commande/commande.module#CommandePageModule' },
-  { path: 'user', loadChildren: './components/user/user.module#UserPageModule' },
-  { path: 'edituser/:id', loadChildren: './components/edituser/edituser.module#EdituserPageModule' },
-  { path: 'create-commande', loadChildren: './components/create-commande/create-commande.module#CreateCommandePageModule' },
-  { path: 'fournisseur', loadChildren: './components/fournisseur/fournisseur.module#FournisseurPageModule' },
-  { path: 'depense', loadChildren: './components/depense/depense.module#DepensePageModule' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  {
+    path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+  },
+  { path: 'login', loadChildren: './components/login/login.module#LoginPageModule' },
+  { path: 'menu', loadChildren: './components/menu/menu.module#MenuPageModule',
+  canActivate: [AuthGuardService] }
+
 ];
 
 @NgModule({

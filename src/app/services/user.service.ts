@@ -22,8 +22,8 @@ export class UserService {
     return this.http.get(this.URL);
   }
 
-  getUser(user: User) {
-    return this.http.get(this.URL + `/${user.id}`)
+  getUser(id) {
+    return this.http.get(this.URL + `/${id}`)
   }
 
   createUser(user: User) {

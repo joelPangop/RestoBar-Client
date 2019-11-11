@@ -12,25 +12,20 @@ import {AppRoutingModule} from './app-routing.module';
 import {CreateCommandePageModule} from './components/create-commande/create-commande.module';
 import {CreateCommandePage} from './components/create-commande/create-commande.page';
 import {TablePageModule} from './components/table/table.module';
-import {IonicStorageModule} from '@ionic/storage';
 import {FormsModule} from '@angular/forms';
 import {IonicSelectableModule} from 'ionic-selectable';
-import { DatePipe } from '@angular/common';
+import { DatePipe, LocationStrategy, PathLocationStrategy, APP_BASE_HREF } from '@angular/common';
+import { Storage, IonicStorageModule } from '@ionic/storage';
+import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 
-const routes: Routes = [
-    {
-      path: '',
-      component: AppComponent,
-      children: [
-        { path: 'table', loadChildren: '../table/table.module#TablePageModule' },
-        { path: 'produit', loadChildren: '../produit/produit.module#ProduitPageModule' },
-        { path: 'commande', loadChildren: '../commande/commande.module#CommandePageModule' },
-        { path: 'user', loadChildren: '../user/user.module#UserPageModule' },
-        { path: 'fournisseur', loadChildren: '../fournisseur/fournisseur.module#FournisseurPageModule' },
-        { path: 'depense', loadChildren: '../depense/depense.module#DepensePageModule' }
-      ]
+  export function jwtOptionsFactory(storage) {
+    return {
+      tokenGetter: () => {
+        return storage.get('access_token');
+      },
+      whitelistedDomains: ['localhost:4000']
     }
-  ];
+  }
 
 @NgModule({
     declarations: [AppComponent],
@@ -42,6 +37,13 @@ const routes: Routes = [
         TablePageModule,
         FormsModule,
         IonicStorageModule.forRoot(),
+        JwtModule.forRoot({
+          jwtOptionsProvider: {
+            provide: JWT_OPTIONS,
+            useFactory: jwtOptionsFactory,
+            deps: [Storage],
+          }
+        }),
         IonicSelectableModule,
         CreateCommandePageModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -49,7 +51,9 @@ const routes: Routes = [
         StatusBar,
         SplashScreen,
         DatePipe,
-        {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+        {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
+        {provide: APP_BASE_HREF, useValue: "/"},
+        {provide: LocationStrategy, useClass: PathLocationStrategy}
     ],
     bootstrap: [AppComponent]
 })

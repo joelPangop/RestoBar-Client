@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Table} from '../models/table';
-import {HttpClient} from '@angular/common/http';
-import {LigneCommande} from '../models/ligne-commande';
+import { Injectable } from '@angular/core';
+import { Table } from '../models/table';
+import { HttpClient } from '@angular/common/http';
+import { LigneCommande } from '../models/ligne-commande';
 
 @Injectable({
     providedIn: 'root'
@@ -13,11 +13,12 @@ export class TableService {
     ligneCommande: LigneCommande;
 
     constructor(private http: HttpClient) {
-            this.tables = [];
-            this.ligneCommande = new LigneCommande();
+        this.tables = [];
+        this.ligneCommande = new LigneCommande();
     }
 
     getTables() {
         return this.http.get(this.URL);
     }
+
 }

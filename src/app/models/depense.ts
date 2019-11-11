@@ -7,7 +7,7 @@ export class Depense {
     constructor(){
         this.typeDepense = TypeDepense.ACHAT;
         this.montant = 0;
-        this.quantite = 0;
+        this.quantite = 1;
         this.description='';
         this.produitAchats = [];
         this.user = new User();
