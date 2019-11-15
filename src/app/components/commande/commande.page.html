@@ -19,7 +19,7 @@
     </ion-row>
     <ion-row>
       <ion-col size=4>
-        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
+        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD" color=primary
           [(ngModel)]="startTime">
         </ion-datetime>
       </ion-col>
@@ -45,28 +45,36 @@
       <ion-col size=3>
         Numero Commande
       </ion-col>
-      <ion-col size=3>
+      <ion-col size=2>
         Montant
       </ion-col>
-      <ion-col size=3>
+      <ion-col size=2>
         Complete
       </ion-col>
       <ion-col size=3>
         Date Livraison
+      </ion-col>
+      <ion-col size=2>
+
       </ion-col>
     </ion-row>
     <ion-row *ngFor="let cmd of this.commandeService.commandes">
       <ion-col size=3>
         {{cmd.numCmd}}
       </ion-col>
-      <ion-col size=3>
+      <ion-col size=2>
         {{cmd.montant}}
       </ion-col>
-      <ion-col size=3>
+      <ion-col size=2>
         {{cmd.complete}}
       </ion-col>
       <ion-col size=3>
         {{cmd.dateLivraison}}
+      </ion-col>
+      <ion-col size=2>
+          <button (click)="showCommande(cmd)">
+              <ion-icon name="eye"></ion-icon>
+          </button>
       </ion-col>
     </ion-row>
 

@@ -20,5 +20,5 @@ export class TableService {
     getTables() {
         return this.http.get(this.URL);
     }
-
+    
 }

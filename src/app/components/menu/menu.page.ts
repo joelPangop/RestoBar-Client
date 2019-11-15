@@ -28,6 +28,7 @@ export class MenuPage implements OnInit {
 
   ngOnInit() {
     this.getUser();
+    this.ionViewWillEnter();
   }
 
   getUser(){
@@ -58,6 +59,14 @@ export class MenuPage implements OnInit {
         {
           title: 'Fournisseurs',
           url: '/menu/fournisseur'
+        },
+        {
+          title: 'Commandes par table',
+          url: '/menu/table-commande'
+        },
+        {
+          title: 'Profile',
+          url: '/menu/profile'
         }
       ];
     } else {

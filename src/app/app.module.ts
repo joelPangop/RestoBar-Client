@@ -17,6 +17,8 @@ import {IonicSelectableModule} from 'ionic-selectable';
 import { DatePipe, LocationStrategy, PathLocationStrategy, APP_BASE_HREF } from '@angular/common';
 import { Storage, IonicStorageModule } from '@ionic/storage';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { ShowCommandePageModule } from './components/show-commande/show-commande.module';
+import { ShowCommandePage } from './components/show-commande/show-commande.page';
 
   export function jwtOptionsFactory(storage) {
     return {
@@ -29,7 +31,7 @@ import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 
 @NgModule({
     declarations: [AppComponent],
-    entryComponents: [CreateCommandePage],
+    entryComponents: [CreateCommandePage, ShowCommandePage],
     imports: [BrowserModule,
         IonicModule.forRoot(),
         HttpClientModule,
@@ -45,7 +47,8 @@ import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
           }
         }),
         IonicSelectableModule,
-        CreateCommandePageModule],
+        CreateCommandePageModule,
+        ShowCommandePageModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     providers: [
         StatusBar,

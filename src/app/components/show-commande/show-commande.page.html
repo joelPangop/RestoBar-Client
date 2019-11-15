@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar style="color: brown;">
+    <ion-title>N# {{commande.numCmd}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-card>
+      <ion-card-header>
+        Montant: {{commande.montant}}
+      </ion-card-header>
+      <ion-row>
+        <ion-col>
+          Nom du produit
+        </ion-col>
+        <ion-col>
+          Type
+        </ion-col>
+        <ion-col>
+          Prix
+        </ion-col>
+        <ion-col>
+          Quantite
+        </ion-col>
+      </ion-row>
+      <ion-row *ngFor="let ldc of this.ligneCommandes">
+        <ion-col>
+          {{ldc.produit.nomProduit}}
+        </ion-col>
+        <ion-col>
+          {{ldc.produit.type}}
+        </ion-col>
+        <ion-col>
+          {{ldc.produit.prix}}
+        </ion-col>
+        <ion-col>
+          {{ldc.quantite}}
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </ion-grid>
+</ion-content>

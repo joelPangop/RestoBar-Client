@@ -2,3 +2,13 @@
     border-width: 4px;
     border-color: brown;
 }
+
+.my-custom-show-commande {
+    --width: 20px;
+    --height:20px;
+    --backgroung: var(--ion-color-light-shade);
+}
+
+ion-datetime{
+    --placeholder-color:var(--ion-color-primary);
+  }

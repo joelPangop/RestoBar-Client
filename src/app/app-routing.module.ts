@@ -9,8 +9,8 @@ const routes: Routes = [
   },
   { path: 'login', loadChildren: './components/login/login.module#LoginPageModule' },
   { path: 'menu', loadChildren: './components/menu/menu.module#MenuPageModule',
-  canActivate: [AuthGuardService] }
-
+  canActivate: [AuthGuardService] },
+  { path: 'show-commande', loadChildren: './components/show-commande/show-commande.module#ShowCommandePageModule' }
 ];
 
 @NgModule({

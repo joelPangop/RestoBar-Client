@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>tableCommande</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size=4>
+        <ion-card>
+          <ion-row *ngFor="let table of tableService.tables">
+            <ion-item (click)="getCommandes(table)">
+              <div>
+                <img src="assets/images/freeTable.jpg">
+              </div>
+              <ion-grid fixed>
+                <ion-row>
+                  <ion-col>
+                    <ion-row>
+                      <div>N#: {{table.noTable}}</div>
+                    </ion-row>
+                    <ion-row>
+                      <div>Nombre de chaises: {{table.nbChaises}}</div>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-item>
+          </ion-row>
+        </ion-card>
+      </ion-col>
+      <ion-col size=8>
+        <ion-card>
+          <ion-grid>
+            <ion-row>
+              <ion-col size=3>
+                Numero Commande
+              </ion-col>
+              <ion-col size=2>
+                Montant
+              </ion-col>
+              <ion-col size=2>
+                Complete
+              </ion-col>
+              <ion-col size=3>
+                Date Livraison
+              </ion-col>
+              <ion-col size=2>
+              </ion-col>
+            </ion-row>
+            <ion-row *ngFor="let cmd of this.someSet">
+              <ion-col size=3>
+                {{cmd.numCmd}}
+              </ion-col>
+              <ion-col size=2>
+                {{cmd.montant}}
+              </ion-col>
+              <ion-col size=2>
+                {{cmd.complete}}
+              </ion-col>
+              <ion-col size=3>
+                {{cmd.dateLivraison}}
+              </ion-col>
+              <ion-col size=2>
+                  <button (click)="showCommande(cmd)">
+                      <ion-icon name="eye"></ion-icon>
+                  </button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

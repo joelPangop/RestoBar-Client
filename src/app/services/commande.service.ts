@@ -24,6 +24,11 @@ export class CommandeService {
     return this.http.get(url);
   }
 
+  getCmdByTable(id: number){
+    const url = this.URL_CMD_API + "/table/" + id;
+    return this.http.get(url);
+  }
+
   getLdcBycmd(id: number) {
     const url = this.URL_LDC_API + "?commande=" + id;
     return this.http.get(url);

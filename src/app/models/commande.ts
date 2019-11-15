@@ -1,3 +1,5 @@
+import { LigneCommande } from './ligne-commande';
+
 export class Commande {
 
     constructor() {
@@ -5,6 +7,7 @@ export class Commande {
         this.montant = 0;
         this.complete = false;
         this.dateLivraison = new Date();
+        this.ligneCommandes = null;
     }
 
     id: number;
@@ -12,4 +15,5 @@ export class Commande {
     montant: number;
     complete: boolean;
     dateLivraison: Date;
+    ligneCommandes: LigneCommande[];
 }

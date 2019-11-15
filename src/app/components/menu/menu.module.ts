@@ -17,7 +17,10 @@ const routes: Routes = [
       { path: 'commande', loadChildren: '../commande/commande.module#CommandePageModule' },
       { path: 'user', loadChildren: '../user/user.module#UserPageModule' },
       { path: 'fournisseur', loadChildren: '../fournisseur/fournisseur.module#FournisseurPageModule' },
-      { path: 'depense', loadChildren: '../depense/depense.module#DepensePageModule' }
+      { path: 'depense', loadChildren: '../depense/depense.module#DepensePageModule' },
+      { path: 'table-commande', loadChildren: '../table-commande/table-commande.module#TableCommandePageModule' },
+      { path: 'profile', loadChildren: '../profile/profile.module#ProfilePageModule' }
+
     ]
   }
 ];
