@@ -76,7 +76,7 @@ export class CreateCommandePage implements OnInit {
                         this.panierService.panier.set(ldc.produit.id, ldc);
                     }
                 }
-            }
+            } 
         });
     }
 
