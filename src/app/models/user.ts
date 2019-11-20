@@ -1,6 +1,8 @@
 import {TableStatus} from './table-status';
 import {RoleType} from './role-type';
 import { Depense } from './depense';
+import { Adresse } from './adresse';
+import { Telephone } from './telephone';
 
 export class User {
     constructor() {
@@ -9,6 +11,9 @@ export class User {
         this.password = '';
         this.salaire = 0;
         this.role = RoleType.EMPLOYE;
+        this.adresse = new Adresse();
+        this.telephones = [];
+
     }
 
     id: number;
@@ -17,4 +22,6 @@ export class User {
     password: string;
     role: RoleType;
     salaire: number;
+    adresse: Adresse;
+    telephones: Telephone[];
 }

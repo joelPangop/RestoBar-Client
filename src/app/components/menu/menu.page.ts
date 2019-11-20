@@ -31,10 +31,10 @@ export class MenuPage implements OnInit {
     this.ionViewWillEnter();
   }
 
-  getUser(){
-     this.userService.getUser(this.authService.user.userId).subscribe(res => {
-            this.authService.currentUser = res as User;
-          })
+  getUser() {
+    this.userService.getUser(this.authService.user.userId).subscribe(res => {
+      this.authService.currentUser = res as User;
+    })
   }
 
   ionViewWillEnter() {
@@ -74,6 +74,10 @@ export class MenuPage implements OnInit {
         {
           title: 'Tables',
           url: '/menu/table'
+        },
+        {
+          title: 'Profile',
+          url: '/menu/profile'
         }
       ]
     }

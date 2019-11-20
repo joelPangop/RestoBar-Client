@@ -1,6 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Utilisateur</ion-title>
+    <ion-row>
+      <ion-col size=9>
+        <div>
+          <ion-label>Utilisateur</ion-label>
+        </div>
+      </ion-col>
+      <ion-col size=1>
+
+      </ion-col>
+      <ion-col size=2>
+        <ion-button (click)="createPdf()">Generate PDF</ion-button>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
@@ -9,7 +21,7 @@
     <input ion-input type="hidden" name="id" #id="ngModel" [(ngModel)]="userService.selectedUser.id" />
     <ion-grid fixed style="width: inherit">
       <ion-row>
-        <ion-col size=6>
+        <ion-col size=7>
           <ion-grid fixed>
             <ion-card>
               <ion-item>
@@ -18,15 +30,91 @@
                 </ion-input>
               </ion-item>
               <ion-item>
-                <ion-input name="password" #name="ngModel" [(ngModel)]="userService.selectedUser.password"
-                  placeholder="Entrer le password">
-                </ion-input>
+                <ion-select [(ngModel)]="userService.selectedUser.role"
+                style="font-family: 'Franklin Gothic Heavy'"
+                  [ngModelOptions]="{standalone: true}">
+                  <ion-select-option *ngFor="let r of roleopts" [value]="r">
+                    {{r}}
+                  </ion-select-option>
+                </ion-select>
               </ion-item>
               <ion-item>
                 <ion-input name="salaire" #name="ngModel" [(ngModel)]="userService.selectedUser.salaire"
                   placeholder="Entrer le salaire">
                 </ion-input>
               </ion-item>
+              <ion-grid fixed>
+                <ion-row>
+                  <ion-col size=5>
+                    <ion-card>
+                      <ion-card-header>
+                        <h4>Adresse</h4>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <ion-item>
+                          <ion-input name="nomRue" #name="ngModel" required="true"
+                            [(ngModel)]="userService.adresse.nomRue" [ngModelOptions]="{standalone: true}"
+                            placeholder="Entrer l'adresse">
+                          </ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-input name="appNum" #name="ngModel" [(ngModel)]="userService.adresse.appNum"
+                            [ngModelOptions]="{standalone: true}" placeholder="Numero appartement(Facultatif)">
+                          </ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-input name="compte" #name="ngModel" [(ngModel)]="userService.adresse.compte"
+                            [ngModelOptions]="{standalone: true}" placeholder="Compte"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-input name="ville" #name="ngModel" [(ngModel)]="userService.adresse.ville"
+                            [ngModelOptions]="{standalone: true}" placeholder="ville"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-input name="region" #name="ngModel" [(ngModel)]="userService.adresse.region"
+                            [ngModelOptions]="{standalone: true}" placeholder="region"></ion-input>
+                        </ion-item>
+                        <ion-item>
+                          <ion-input name="pays" #name="ngModel" [(ngModel)]="userService.adresse.pays"
+                            [ngModelOptions]="{standalone: true}" placeholder="pays"></ion-input>
+                        </ion-item>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                  <ion-col size=7>
+                    <ion-title>
+                      <ion-button (click)="addTelephone()">
+                        <ion-icon name="add-circle"></ion-icon>
+                      </ion-button>
+                    </ion-title>
+                    <ion-card>
+                      <ion-row text-center>
+                        <ion-col size="4">Type</ion-col>
+                        <ion-col size="5">Number</ion-col>
+                        <ion-col size="3">Remove</ion-col>
+                      </ion-row>
+                      <ion-row *ngFor="let telephone of userService.telephones">
+                        <ion-col size="4">
+                          <ion-select [(ngModel)]="telephone.categorieTelephone" [ngModelOptions]="{standalone: true}">
+                            <ion-select-option *ngFor="let t of options" [value]="t">
+                              {{t}}
+                            </ion-select-option>
+                          </ion-select>
+                        </ion-col>
+                        <ion-col size="5">
+                          <ion-input name="numeroTelephone" #name="ngModel" position="floating"
+                            [(ngModel)]="telephone.numeroTelephone"></ion-input>
+                        </ion-col>
+                        <ion-col size="3">
+                          <ion-button (click)="removeTelephone(telephone)">
+                            <ion-icon name="trash">remove</ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
               <ion-item>
                 <ion-grid>
                   <ion-row>
@@ -37,7 +125,7 @@
                       </ion-button>
                     </ion-col>
                     <ion-col size="4">
-                      <ion-button>
+                      <ion-button (click)="resetForm(userForm)">
                         Effacer
                       </ion-button>
                     </ion-col>
@@ -47,7 +135,7 @@
             </ion-card>
           </ion-grid>
         </ion-col>
-        <ion-col size=6>
+        <ion-col size=5>
           <ion-card>
             <ion-grid fixed>
               <ion-row>

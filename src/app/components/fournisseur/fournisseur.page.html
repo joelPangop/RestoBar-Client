@@ -20,142 +20,200 @@
                                 [(ngModel)]="fournisseurService.selectedFournisseur.nom" placeholder="Enter the name">
                             </ion-input>
                         </ion-item>
-                        <ion-card>
-                            <ion-card-header>
-                                <h4>Adresse</h4>
-                            </ion-card-header>
-                            <ion-card-content>
-                                <ion-item>
-                                    <ion-input name="nomRue" #name="ngModel" required="true"
-                                        [(ngModel)]="fournisseurService.adresse.nomRue"
-                                        [ngModelOptions]="{standalone: true}" placeholder="Entrer l'adresse">
-                                    </ion-input>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-input name="appNum" #name="ngModel"
-                                        [(ngModel)]="fournisseurService.adresse.appNum"
-                                        [ngModelOptions]="{standalone: true}"
-                                        placeholder="Numero appartement(Facultatif)"></ion-input>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-input name="compte" #name="ngModel"
-                                        [(ngModel)]="fournisseurService.adresse.compte"
-                                        [ngModelOptions]="{standalone: true}" placeholder="Compte"></ion-input>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-input name="ville" #name="ngModel"
-                                        [(ngModel)]="fournisseurService.adresse.ville"
-                                        [ngModelOptions]="{standalone: true}" placeholder="ville"></ion-input>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-input name="region" #name="ngModel"
-                                        [(ngModel)]="fournisseurService.adresse.region"
-                                        [ngModelOptions]="{standalone: true}" placeholder="region"></ion-input>
-                                </ion-item>
-                                <ion-item>
-                                    <ion-input name="pays" #name="ngModel" [(ngModel)]="fournisseurService.adresse.pays"
-                                        [ngModelOptions]="{standalone: true}" placeholder="pays"></ion-input>
-                                </ion-item>
-                            </ion-card-content>
-                        </ion-card>
-                        <ion-card>
-                            <ion-card-header>
-                                <h4>Produits</h4>
-                            </ion-card-header>
-                            <ion-card-content>
-                                <ion-grid fixed>
-                                    <ion-row>
-                                        <ion-col size="4">
-                                            <ion-card style="height: 100%">
-                                                <select [(ngModel)]="fournisseurService.selectedFournisseur.produits"
-                                                    [compareWith]="compareFunction"
-                                                    style="width: 100%; height: 100%; font-family: 'Franklin Gothic Heavy'"
-                                                    multiple="true" [ngModelOptions]="{standalone: true}">
-                                                    <option *ngFor="let prod of produitService.produits"
-                                                        style="font-family: 'Franklin Gothic Heavy'" [value]="prod"
-                                                        (dblclick)="getProduit($event, prod)">
-                                                        {{prod.nomProduit}}
-                                                        <!--                                                        &nbsp;&nbsp;&nbsp;quantite: {{prod.quantite}}-->
-                                                    </option>
-                                                </select>
-                                            </ion-card>
-                                        </ion-col>
-                                        <ion-col size="8">
-                                            <form #produitForm="ngForm">
-                                                <ion-card>
-                                                    <ion-card-content>
-                                                        <ion-item>
-                                                            <ion-input name="nomProduit" #name="ngModel"
-                                                                [(ngModel)]="produitService.produit.nomProduit"
-                                                                [ngModelOptions]="{standalone: true}"
-                                                                placeholder="nomProduit"></ion-input>
-                                                            <ion-label style="font-family: 'Franklin Gothic Heavy'">
-                                                                Quantite:
-                                                            </ion-label>
-                                                            <ion-input name="quantite" #name="ngModel"
-                                                                style="font-family: 'Franklin Gothic Heavy'"
-                                                                [(ngModel)]="produitService.produit.quantite"
-                                                                [ngModelOptions]="{standalone: true}"
-                                                                placeholder="quantite"></ion-input>
-                                                        </ion-item>
-                                                        <ion-item>
-                                                            <ion-label style="font-family: 'Franklin Gothic Heavy'">
-                                                                Type:
-                                                            </ion-label>&nbsp;
-                                                            <select [(ngModel)]="produitService.produit.type"
-                                                                style="font-family: 'Franklin Gothic Heavy'"
-                                                                [ngModelOptions]="{standalone: true}">
-                                                                <option *ngFor="let t of options" [value]="t">
-                                                                    {{t}}
-                                                                </option>
-                                                            </select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                            <ion-label style="font-family: 'Franklin Gothic Heavy'">
-                                                                Prix:
-                                                            </ion-label>
-                                                            <ion-input name="prix" #name="ngModel"
-                                                                style="font-family: 'Franklin Gothic Heavy';"
-                                                                [(ngModel)]="produitService.produit.prix"
-                                                                [ngModelOptions]="{standalone: true}"
-                                                                placeholder="prix"></ion-input>
-                                                        </ion-item>
-                                                        <ion-item>
-                                                            <ion-textarea name="description" #name="ngModel"
-                                                                [(ngModel)]="produitService.produit.description"
-                                                                [ngModelOptions]="{standalone: true}"
-                                                                placeholder="description">
-                                                            </ion-textarea>
-                                                        </ion-item>
-                                                        <ion-item>
-                                                            <ion-grid>
-                                                                <ion-row>
-                                                                    <ion-col size="4">
-                                                                        <ion-button (click)="addProduit(produitForm)">
-                                                                            Enregistrer
-                                                                            Produit
-                                                                        </ion-button>
-                                                                    </ion-col>
-                                                                    <ion-col size="1">
-                                                                        <ion-button
-                                                                            (click)="deleteProduit(produitService.produit)">
-                                                                            <ion-icon name="trash"></ion-icon>
-                                                                        </ion-button>
-                                                                    </ion-col>
-                                                                    <ion-col size="3">
-                                                                        <ion-button (click)="resetProduit()">Effacer
-                                                                            formulaire
-                                                                        </ion-button>
-                                                                    </ion-col>
-                                                                </ion-row>
-                                                            </ion-grid>
-                                                        </ion-item>
-                                                    </ion-card-content>
+                        <ion-grid fixed>
+                            <ion-row>
+                                <ion-col size=6>
+                                    <ion-card>
+                                        <ion-card-header>
+                                            <h4>Adresse</h4>
+                                        </ion-card-header>
+                                        <ion-card-content>
+                                            <ion-item>
+                                                <ion-input name="nomRue" #name="ngModel" required="true"
+                                                    [(ngModel)]="fournisseurService.adresse.nomRue"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    placeholder="Entrer l'adresse">
+                                                </ion-input>
+                                            </ion-item>
+                                            <ion-item>
+                                                <ion-input name="appNum" #name="ngModel"
+                                                    [(ngModel)]="fournisseurService.adresse.appNum"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    placeholder="Numero appartement(Facultatif)"></ion-input>
+                                            </ion-item>
+                                            <ion-item>
+                                                <ion-input name="compte" #name="ngModel"
+                                                    [(ngModel)]="fournisseurService.adresse.compte"
+                                                    [ngModelOptions]="{standalone: true}" placeholder="Compte">
+                                                </ion-input>
+                                            </ion-item>
+                                            <ion-item>
+                                                <ion-input name="ville" #name="ngModel"
+                                                    [(ngModel)]="fournisseurService.adresse.ville"
+                                                    [ngModelOptions]="{standalone: true}" placeholder="ville">
+                                                </ion-input>
+                                            </ion-item>
+                                            <ion-item>
+                                                <ion-input name="region" #name="ngModel"
+                                                    [(ngModel)]="fournisseurService.adresse.region"
+                                                    [ngModelOptions]="{standalone: true}" placeholder="region">
+                                                </ion-input>
+                                            </ion-item>
+                                            <ion-item>
+                                                <ion-input name="pays" #name="ngModel"
+                                                    [(ngModel)]="fournisseurService.adresse.pays"
+                                                    [ngModelOptions]="{standalone: true}" placeholder="pays">
+                                                </ion-input>
+                                            </ion-item>
+                                        </ion-card-content>
+                                    </ion-card>
+                                </ion-col>
+                                <ion-col>
+                                    <ion-title>
+                                        <ion-button (click)="addTelephone()">
+                                            <ion-icon name="add-circle"></ion-icon>
+                                        </ion-button>
+                                    </ion-title>
+                                    <ion-card>
+                                        <ion-row text-center>
+                                            <ion-col size="4">Type</ion-col>
+                                            <ion-col size="5">Number</ion-col>
+                                            <ion-col size="3">Remove</ion-col>
+                                        </ion-row>
+                                        <ion-row *ngFor="let telephone of fournisseurService.telephones">
+                                            <ion-col size="4">
+                                                <ion-select [(ngModel)]="telephone.categorieTelephone"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                    <ion-select-option *ngFor="let t of phoneOptions" [value]="t">
+                                                        {{t}}
+                                                    </ion-select-option>
+                                                </ion-select>
+                                            </ion-col>
+                                            <ion-col size="5">
+                                                <ion-input name="numeroTelephone" #name="ngModel" position="floating"
+                                                    [(ngModel)]="telephone.numeroTelephone"></ion-input>
+                                            </ion-col>
+                                            <ion-col size="3">
+                                                <button (click)="removeTelephone(telephone)">
+                                                    <ion-icon name="trash">remove</ion-icon>
+                                                </button>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-card>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                        <ion-grid fixed>
+                            <ion-card>
+                                <ion-card-header>
+                                    <h4>Produits</h4>
+                                </ion-card-header>
+                                <ion-card-content>
+                                    <ion-grid fixed>
+                                        <ion-row>
+                                            <ion-col size="4">
+                                                <ion-card style="height: 100%">
+                                                    <select
+                                                        [(ngModel)]="fournisseurService.selectedFournisseur.produits"
+                                                        [compareWith]="compareFunction"
+                                                        style="width: 100%; height: 100%; font-family: 'Franklin Gothic Heavy'"
+                                                        multiple="true" [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let prod of produitService.produits"
+                                                            style="font-family: 'Franklin Gothic Heavy'" [value]="prod"
+                                                            (dblclick)="getProduit($event, prod)">
+                                                            {{prod.nomProduit}}
+                                                            <!--                                                        &nbsp;&nbsp;&nbsp;quantite: {{prod.quantite}}-->
+                                                        </option>
+                                                    </select>
                                                 </ion-card>
-                                            </form>
-                                        </ion-col>
-                                    </ion-row>
-                                </ion-grid>
-                            </ion-card-content>
-                        </ion-card>
+                                            </ion-col>
+                                            <ion-col size="8">
+                                                <form #produitForm="ngForm">
+                                                    <ion-card>
+                                                        <ion-card-content>
+                                                            <ion-item>
+                                                                <ion-input name="nomProduit" #name="ngModel"
+                                                                    [(ngModel)]="produitService.produit.nomProduit"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    placeholder="Nom Produit"></ion-input>
+                                                                <ion-label style="font-family: 'Franklin Gothic Heavy'">
+                                                                    Quantite:
+                                                                </ion-label>
+                                                                <ion-input name="quantite" #name="ngModel"
+                                                                    style="font-family: 'Franklin Gothic Heavy'"
+                                                                    [(ngModel)]="produitService.produit.quantite"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    placeholder="Quantite"></ion-input>
+                                                            </ion-item>
+                                                            <ion-item>
+                                                                <ion-label style="font-family: 'Franklin Gothic Heavy'">
+                                                                    Type:
+                                                                </ion-label>&nbsp;
+
+                                                                <ion-select [(ngModel)]="produitService.produit.type"
+                                                                    style="font-family: 'Franklin Gothic'"
+                                                                    [ngModelOptions]="{standalone: true}">
+                                                                    <ion-select-option *ngFor="let t of options"
+                                                                        [value]="t">
+                                                                        {{t}}
+                                                                    </ion-select-option>
+                                                                </ion-select>
+                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <ion-label style="font-family: 'Franklin Gothic Heavy'">
+                                                                    Prix:
+                                                                </ion-label>
+                                                                <ion-input name="prix" #name="ngModel"
+                                                                    style="font-family: 'Franklin Gothic Heavy';"
+                                                                    [(ngModel)]="produitService.produit.prix"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    placeholder="prix"></ion-input>
+                                                            </ion-item>
+                                                            <ion-item>
+                                                                <ion-textarea name="description" #name="ngModel"
+                                                                    [(ngModel)]="produitService.produit.description"
+                                                                    [ngModelOptions]="{standalone: true}"
+                                                                    placeholder="description">
+                                                                </ion-textarea>
+                                                            </ion-item>
+                                                            <ion-item>
+                                                                <ion-grid>
+                                                                    <ion-row>
+                                                                        <ion-col size="4">
+                                                                            <ion-button
+                                                                                (click)="addProduit(produitForm)">
+                                                                                Enregistrer
+                                                                                Produit
+                                                                            </ion-button>
+                                                                        </ion-col>
+                                                                        <ion-col size="0.5">
+
+                                                                        </ion-col>
+                                                                        <ion-col size="1">
+                                                                            <ion-button
+                                                                                (click)="deleteProduit(produitService.produit)">
+                                                                                <ion-icon name="trash"></ion-icon>
+                                                                            </ion-button>
+                                                                        </ion-col>
+                                                                        <ion-col size="0.5">
+
+                                                                        </ion-col>
+                                                                        <ion-col size="3">
+                                                                            <ion-button (click)="resetProduit()">Effacer
+                                                                                formulaire
+                                                                            </ion-button>
+                                                                        </ion-col>
+                                                                    </ion-row>
+                                                                </ion-grid>
+                                                            </ion-item>
+                                                        </ion-card-content>
+                                                    </ion-card>
+                                                </form>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-grid>
                         <div>
                             <ion-grid>
                                 <ion-row>

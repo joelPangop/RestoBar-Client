@@ -5,5 +5,127 @@
 </ion-header>
 
 <ion-content>
+  <form [formGroup]=userForm (ngSubmit)="saveUser()">
+    <ion-grid fixed style="width: inherit">
+      <ion-row>
+        <ion-col size=8>
+          <ion-grid fixed>
+            <ion-card>
+              <ion-item>
+                <ion-label>{{authService.currentUser.username}}
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="7">
+                      <ion-input [type]="passwordType" [ngModelOptions]="{standalone: true}" *ngIf="ischanged"
+                        formControlName="password"
+                        placeholder="Entrer le password">
+                      </ion-input>
+                      <ion-label *ngIf="!ischanged">************
+                      </ion-label>
+                    </ion-col>
+                    <ion-col size=1>
+                      <ion-button (click)="togglePassword()" *ngIf="ischanged">
+                        <ion-icon name="eye" color="gray" item-end></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                    <ion-col size=1>
+                      <ion-toggle [(ngModel)]="ischanged" color="primary" [ngModelOptions]="{standalone: true}" checked>
+                      </ion-toggle>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+              <ion-item *ngIf="ischanged">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="7">
+                      <div class="form-group">
+                        <ion-input [type]="passwordType" formControlName="passwordConfirm"
+                          placeholder="Confirm Password*" [ngModelOptions]="{standalone: true}">
+                        </ion-input>
 
+                        <div class="text-danger"
+                          *ngIf="passwordConfirm?.valid && (passwordConfirm.dirty || passwordConfirm.touched)">
+                          <div *ngIf="userForm.errors.passwordMismatch">
+                            Password and Confirm Password fields should match
+                          </div>
+                        </div>
+                      </div>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-button expand="full" type="submit" [disabled]="!userForm.valid">Save</ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+              <ion-item>
+                <ion-label>{{authService.currentUser.salaire}}
+                </ion-label>
+              </ion-item>
+              <ion-grid>
+                <ion-row>
+                  <ion-col size=5>
+                    <ion-card>
+                      <ion-card-header>
+                        <h4>Adresse</h4>
+                      </ion-card-header>
+                      <ion-card-content>
+                        <ion-item>
+                          <ion-label>{{authService.currentUser.adresse.nomRue}}</ion-label>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label>{{authService.currentUser.adresse.appNum}}</ion-label>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label>{{authService.currentUser.adresse.compte}}</ion-label>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label>{{authService.currentUser.adresse.ville}}</ion-label>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label>{{authService.currentUser.adresse.region}}</ion-label>
+                        </ion-item>
+                        <ion-item>
+                          <ion-label>
+                            {{authService.currentUser.adresse.pays}}
+                          </ion-label>
+                        </ion-item>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                  <ion-col size=7>
+                    <ion-card>
+                      <ion-row>
+                        <ion-col>
+                          Type telephone
+                        </ion-col>
+                        <ion-col>
+                          Numero Telephone
+                        </ion-col>
+                      </ion-row>
+                      <ion-row *ngFor="let t of authService.currentUser.telephones">
+                        <ion-col>
+                          <ion-label>
+                            {{t.categorieTelephone}}
+                          </ion-label>
+                        </ion-col>
+                        <ion-col>
+                          <ion-label>
+                            {{t.numeroTelephone}}
+                          </ion-label>
+                        </ion-col>
+                      </ion-row>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card>
+          </ion-grid>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

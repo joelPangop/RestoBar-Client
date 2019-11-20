@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {LoadingController, ModalController, NavParams, ToastController} from '@ionic/angular';
-import {Produit} from '../../models/produit';
-import {LigneCommande} from '../../models/ligne-commande';
-import {PanierService} from '../../services/panier.service';
-import {Table} from '../../models/table';
-import {ProduitService} from '../../services/produit.service';
-import {Commande} from '../../models/commande';
-import {TableService} from '../../services/table.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { LoadingController, ModalController, NavParams, ToastController } from '@ionic/angular';
+import { Produit } from '../../models/produit';
+import { LigneCommande } from '../../models/ligne-commande';
+import { PanierService } from '../../services/panier.service';
+import { Table } from '../../models/table';
+import { ProduitService } from '../../services/produit.service';
+import { Commande } from '../../models/commande';
+import { TableService } from '../../services/table.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-create-commande',
@@ -21,9 +21,9 @@ export class CreateCommandePage implements OnInit {
     commande: Commande;
 
     constructor(public panierService: PanierService, public modalController: ModalController,
-                public produitService: ProduitService,
-                public tableService: TableService, private router: Router, public loadingController: LoadingController,
-                public navParams: NavParams, public toastController: ToastController) {
+        public produitService: ProduitService,
+        public tableService: TableService, private router: Router, public loadingController: LoadingController,
+        public navParams: NavParams, public toastController: ToastController) {
         this.table = this.navParams.get('table');
         this.commande = new Commande();
     }
@@ -38,9 +38,9 @@ export class CreateCommandePage implements OnInit {
     public getCommandLines() {
         const ligneCommandes: LigneCommande[] = [];
         for (const [key, value] of this.panierService.panier.entries()) {
-            if (value.table.noTable === this.table.noTable) {
-                ligneCommandes.push(value as LigneCommande);
-            }
+            // if (value.commande.table.noTable === this.table.noTable) {
+            ligneCommandes.push(value as LigneCommande);
+            // }
             console.log(ligneCommandes);
         }
         return ligneCommandes;
@@ -55,9 +55,15 @@ export class CreateCommandePage implements OnInit {
     public async getExistingPanier() {
         await this.panierService.getCommandeTable(this.table).subscribe(res => {
             console.log(res);
-            this.panierService.ligneCommandes = res as LigneCommande[];
-            if (this.panierService.ligneCommandes.length > 0 && this.panierService.ligneCommandes[0].commande.complete === false) {
-                this.commande = this.panierService.ligneCommandes[0].commande;
+            const commandes: Commande[] = res;
+            for (let cmd of commandes) {
+                if (cmd.complete === false) {
+                    this.panierService.ligneCommandes = cmd.ligneCommandes;
+                    this.commande = cmd
+                }
+            }
+            if (this.panierService.ligneCommandes.length > 0 && this.panierService.commande.complete === false) {
+                this.commande = this.panierService.commande;
                 this.commandNumber = this.commande.numCmd;
                 this.getSubTotal(this.panierService.ligneCommandes);
                 for (const ldc of this.panierService.ligneCommandes) {
@@ -86,7 +92,6 @@ export class CreateCommandePage implements OnInit {
             ligneCommande.produit = produit;
             ligneCommande.quantite = 1;
             produit.quantite--;
-            ligneCommande.table = this.table;
             this.panierService.ajouter(this.panierService.panier, ligneCommande);
             this.getSubTotal(this.getCommandLines());
             this.checkoutcommand(false);
@@ -144,9 +149,10 @@ export class CreateCommandePage implements OnInit {
     async checkoutcommand(complete) {
         this.commande.complete = complete;
         this.commande.dateLivraison = new Date();
+        this.commande.table = this.table;
         this.commande.montant = this.subtotal;
         this.commande.numCmd = this.commandNumber;
-        this.panierService.checkoutCommand(this.getCommandLines(), this.commande).subscribe(res=>{
+        this.panierService.checkoutCommand(this.getCommandLines(), this.commande).subscribe(res => {
             console.log(this.commande = res as Commande);
         });;
     }

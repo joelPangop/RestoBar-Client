@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
+import { Adresse } from '../models/adresse';
+import { Telephone } from '../models/telephone';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +13,15 @@ export class UserService {
 
   users: User[];
   selectedUser: User;
+  adresse: Adresse;
+  telephones: Telephone[];
 
   constructor(private http: HttpClient) {
     this.users = [];
     this.selectedUser = new User();
+    this.adresse = new Adresse();
+    this.telephones = [];
+    this.telephones.push(new Telephone());
   }
 
 

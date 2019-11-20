@@ -4,3 +4,7 @@ button{
 ion-button{
   --background: #771d19;
 }
+ion-item{
+  --background: var(--ion-color-light-shade);
+  font-family: "Franklin Gothic Medium";
+}

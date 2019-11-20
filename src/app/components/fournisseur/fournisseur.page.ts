@@ -1,13 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {FournisseurService} from '../../services/fournisseur.service';
-import {TypeDepense} from '../../models/type-depense';
-import {Fournisseur} from '../../models/fournisseur';
-import {NgForm} from '@angular/forms';
-import {ModalController, ToastController} from '@ionic/angular';
-import {Adresse} from '../../models/adresse';
-import {ProduitService} from '../../services/produit.service';
-import {Produit} from '../../models/produit';
-import {TypeProduit} from '../../models/type-produit';
+import { Component, OnInit } from '@angular/core';
+import { FournisseurService } from '../../services/fournisseur.service';
+import { TypeDepense } from '../../models/type-depense';
+import { Fournisseur } from '../../models/fournisseur';
+import { NgForm } from '@angular/forms';
+import { ModalController, ToastController } from '@ionic/angular';
+import { Adresse } from '../../models/adresse';
+import { ProduitService } from '../../services/produit.service';
+import { Produit } from '../../models/produit';
+import { TypeProduit } from '../../models/type-produit';
+import { Telephone } from 'src/app/models/telephone';
+import { CategorieTelephone } from 'src/app/models/categorie-telephone';
 
 @Component({
     selector: 'app-fournisseur',
@@ -18,6 +20,7 @@ export class FournisseurPage implements OnInit {
 
     TypeDepense: typeof TypeDepense = TypeDepense;
     options: string[];
+    phoneOptions: string[];
     produits: Produit[];
 
     constructor(public fournisseurService: FournisseurService, private toastController: ToastController,
@@ -27,6 +30,7 @@ export class FournisseurPage implements OnInit {
 
     ngOnInit() {
         this.options = Object.values(TypeProduit);
+        this.phoneOptions = Object.values(CategorieTelephone);
         this.getAllProduits();
         this.getFournisseurs();
     }
@@ -46,6 +50,8 @@ export class FournisseurPage implements OnInit {
     getFournisseur(body: any) {
         this.fournisseurService.selectedFournisseur = body as Fournisseur;
         this.fournisseurService.adresse = body.adresse;
+        if (body.telephones)
+            this.fournisseurService.telephones = body.telephones;
     }
 
     deleteFournisseur(body: Fournisseur) {
@@ -69,11 +75,11 @@ export class FournisseurPage implements OnInit {
         });
     }
 
-    deleteProduit(produit: Produit){
-        this.produitService.findCommandeByProduit(produit).subscribe(res =>{
-            if(res){
+    deleteProduit(produit: Produit) {
+        this.produitService.findCommandeByProduit(produit).subscribe(res => {
+            if (res) {
                 this.presentToast("Produit assigné à une ou plusieurs commandes");
-            }else {
+            } else {
                 this.produitService.deleteProduit(produit).subscribe(res => {
                     console.log(res);
                     let arr = this.produitService.produits;
@@ -91,6 +97,7 @@ export class FournisseurPage implements OnInit {
 
     addFournisseur(form: NgForm) {
         console.log(form.value);
+        form.value.telephones = this.fournisseurService.telephones;
         if (form.value.id) {
             this.fournisseurService.updateFournisseur(form.value)
                 .subscribe(res => {
@@ -139,6 +146,8 @@ export class FournisseurPage implements OnInit {
         this.fournisseurService.selectedFournisseur = new Fournisseur();
         this.fournisseurService.adresse = new Adresse();
         this.produitService.produit = new Produit();
+        this.fournisseurService.telephones = [];
+
     }
 
     resetProduit() {
@@ -153,6 +162,23 @@ export class FournisseurPage implements OnInit {
             color: 'transparent'
         });
         toast.present();
+    }
+
+    async addTelephone() {
+        if (this.fournisseurService.telephones.length > 0) {
+            if (this.fournisseurService.telephones[this.fournisseurService.telephones.length - 1].numeroTelephone !== '') {
+                this.fournisseurService.telephones.push(new Telephone());
+            }
+        }else{
+            this.fournisseurService.telephones.push(new Telephone());
+        }
+    }
+
+    async removeTelephone(telephone: Telephone) {
+        const index = this.fournisseurService.telephones.indexOf(telephone, 0);
+        if (index > -1) {
+            this.fournisseurService.telephones.splice(index, 1);
+        }
     }
 
 }

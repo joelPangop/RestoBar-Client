@@ -21,12 +21,14 @@ export class PanierService {
     ligneCommandes: LigneCommande[];
     produits: Produit[] = [];
     table: Table;
+    commande: Commande;
 
     constructor(private http: HttpClient, private produitService: ProduitService, private panierTransactionService: PanierTransactionService) {
         this.panier = new Map<number, LigneCommande>();
         this.ligneCommandes = new Array();
         this.produits = [];
         this.table = new Table();
+        this.commande = new Commande();
     }
 
     public updatePanier(operation, ligneCmd: LigneCommande) {
@@ -94,6 +96,8 @@ export class PanierService {
     }
 
     checkoutCommand(panier: LigneCommande[], commande: Commande) {
+       
+        commande.ligneCommandes = panier;
         if(commande.id !== undefined){
             let url: string = this.URL +`/${commande.id}`+"?panier="+JSON.stringify(panier);
             return this.http.put<Commande>(url, commande).pipe(
@@ -102,7 +106,7 @@ export class PanierService {
                 })
             )
         } else {
-            let url: string = this.URL +"?panier="+JSON.stringify(panier);
+            let url: string = this.URL;
             return this.http.post<Commande>(url, commande).pipe(
                 tap(async (res: Commande) => {
                     console.log(res);
@@ -112,10 +116,15 @@ export class PanierService {
     }
 
     public getCommandeTable(table: Table) {
-        return this.http.get<LigneCommande[]>(this.URL_TAB + `/${table.id}`).pipe(
-            tap(async (res: LigneCommande[]) => {
+        return this.http.get<Commande[]>(this.URL_TAB + `/${table.id}`).pipe(
+            tap(async (res: Commande[]) => {
                 console.log(res);
-                this.ligneCommandes = res as LigneCommande[];
+                for(let cmd of res as Commande[]){
+                    if(cmd.complete == false)
+                    this.ligneCommandes = cmd.ligneCommandes;
+                    this.commande = cmd;
+                }
+
             })
         );
     }
@@ -123,7 +132,7 @@ export class PanierService {
     public getLDC(table: Table, produit: Produit){
         let ldc : LigneCommande;
         for(let [key, value] of this.panier){
-            if(key === produit.id && value.table.noTable === table.noTable){
+            if(key === produit.id && value.commande.table.noTable === table.noTable){
                 ldc = value;
             }
         }

@@ -1,4 +1,5 @@
 import { LigneCommande } from './ligne-commande';
+import { Table } from './table';
 
 export class Commande {
 
@@ -7,7 +8,8 @@ export class Commande {
         this.montant = 0;
         this.complete = false;
         this.dateLivraison = new Date();
-        this.ligneCommandes = null;
+        this.ligneCommandes = [];
+        this.table = new Table();
     }
 
     id: number;
@@ -16,4 +18,5 @@ export class Commande {
     complete: boolean;
     dateLivraison: Date;
     ligneCommandes: LigneCommande[];
+    table: Table;
 }

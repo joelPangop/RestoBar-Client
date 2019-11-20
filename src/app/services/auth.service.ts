@@ -21,6 +21,7 @@ export class AuthService {
   user = null;
   authenticationState = new BehaviorSubject(false);
   currentUser: User;
+  isPasswordForgotten: boolean = false;
 
   constructor(private http: HttpClient, public helper: JwtHelperService, public storage: Storage,
     private plt: Platform, private alertController: AlertController, private userService: UserService) {
@@ -64,7 +65,23 @@ export class AuthService {
           this.authenticationState.next(true);
         }),
         catchError(e => {
-          this.showAlert(e.error.msg);
+          this.showAlert("incorrect username or/and password");
+          this.isPasswordForgotten = true;
+          throw new Error(e);
+        })
+      );
+  }
+
+  changePassword(user: User) {
+    return this.http.post(`${this.url}/change-password`, user)
+      .pipe(
+        tap(res => {
+          this.storage.set(TOKEN_KEY, res['token']);
+          this.user = this.helper.decodeToken(res['token']);
+          this.authenticationState.next(true);
+        }),
+        catchError(e => {
+          this.showAlert("");
           throw new Error(e);
         })
       );
@@ -75,8 +92,12 @@ export class AuthService {
       this.authenticationState.next(false);
     });
 
-    this.storage.remove("page").then(()=>{
+    this.storage.remove("page").then(() => {
       console.log("route page removed");
+    })
+
+    this.storage.remove("user").then(() => {
+      console.log("user removed");
     })
   }
 

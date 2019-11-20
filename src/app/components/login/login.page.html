@@ -21,6 +21,9 @@
     <ion-button expand="full" type="submit" [disabled]="!credentialsForm.valid">Login</ion-button>
     <ion-button expand="full" type="button" (click)="register()" [disabled]="!credentialsForm.valid">Register
     </ion-button>
-
   </form>
+  <!-- <div padding *ngIf="authService.isPasswordForgotten"></div> -->
+  <div padding>
+    <ion-button block (click)="send()">Send</ion-button>
+  </div>
 </ion-content>

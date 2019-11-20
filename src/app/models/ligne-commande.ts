@@ -7,13 +7,11 @@ export class LigneCommande {
 
     constructor() {
         this.quantite = 0;
-        this.table = new Table();
     }
 
     id: number;
     produit: Produit;
     commande: Commande;
-    table: Table;
     quantite: number;
 }
 

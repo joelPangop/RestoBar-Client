@@ -13,20 +13,34 @@
       <ion-col size=4>
         Fin
       </ion-col>
+      <ion-col size=0.5>
+
+      </ion-col>
       <ion-col size=4>
 
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size=4>
-        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD" color=primary
-          [(ngModel)]="startTime">
-        </ion-datetime>
+      <ion-col size=3>
+        <ion-item>
+          <div>
+            <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
+              style="font-family: 'Franklin Gothic Heavy'" placeholder-color=brown size=4 [(ngModel)]="startTime">
+            </ion-datetime>
+          </div>
+        </ion-item>
       </ion-col>
-      <ion-col size=4>
-        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
-          [(ngModel)]="endTime">
-        </ion-datetime>
+      <ion-col size=0.5>
+
+      </ion-col>
+      <ion-col size=3>
+        <ion-item>
+          <div>
+            <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
+              style="font-family: 'Franklin Gothic Heavy'" [(ngModel)]="endTime">
+            </ion-datetime>
+          </div>
+        </ion-item>
       </ion-col>
       <ion-col size=4>
         <ion-button (click)="getAllBytime()">
@@ -72,9 +86,9 @@
         {{cmd.dateLivraison}}
       </ion-col>
       <ion-col size=2>
-          <button (click)="showCommande(cmd)">
-              <ion-icon name="eye"></ion-icon>
-          </button>
+        <button (click)="showCommande(cmd)">
+          <ion-icon name="eye"></ion-icon>
+        </button>
       </ion-col>
     </ion-row>
 

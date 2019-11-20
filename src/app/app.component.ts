@@ -39,7 +39,6 @@ export class AppComponent {
               this.router.navigate(['menu/table']);
             }
           })
-
         } else {
           this.router.navigate(['login']);
         }

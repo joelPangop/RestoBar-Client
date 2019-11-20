@@ -34,7 +34,6 @@
                                                     </ion-row>
                                                 </ion-col>
                                             </ion-row>
-                                            <!--<ion-button (click)="createCommand(table)">Ajouter Commande</ion-button>-->
                                         </ion-grid>
                                     </ion-item>
                                 </ion-card>
@@ -47,107 +46,10 @@
                 <ion-card>
                     <ion-row>
                         <ion-col size="6">
-                            <ion-grid fixed>
-                                <ion-row>
-                                    <ion-grid fixed>
-                                        <ion-card>
-                                            <ion-card-header>
-                                                <h4>Produits en Stock</h4>
-                                            </ion-card-header>
-                                            <ion-card-content>
-                                                <ion-row *ngFor="let prod of panierService.produits">
-                                                    <ion-col>{{prod.nomProduit}}</ion-col>
-                                                    <ion-col>
-                                                        Quantité: {{prod.quantite}}
-                                                    </ion-col>
-                                                    <ion-col>
-                                                        <button (click)="addCommande(prod)">
-                                                            <ion-icon name="add-circle"></ion-icon>
-                                                        </button>
-                                                    </ion-col>
-                                                </ion-row>
-                                            </ion-card-content>
-                                        </ion-card>
-                                    </ion-grid>
-                                </ion-row>
-                            </ion-grid>
+                         
                         </ion-col>
                         <ion-col size="6">
-                            <ion-row>
-                                <ion-grid fixed>
-                                    <ion-card>
-                                        <ion-card-header>
-                                            <div>
-                                                <h5 style="color: #1e2023; font-family: 'Arial Black'">Table n#
-                                                    {{table.noTable}}</h5>
-                                                <h1>
-                                                    <ion-label>Commande n# {{commandNumber}}</ion-label>
-                                                </h1>
-                                            </div>
-                                        </ion-card-header>
-                                        <ion-card-content>
-                                            <ion-grid *ngFor="let cmd of getCommandLines()" fixed>
-                                                <ion-row *ngIf="renderProdPanier(cmd)">
-                                                    <ion-col>
-                                                        <ion-row>
-                                                            <ion-col>
-                                                                <div
-                                                                    style="color: #771d19; font-family: 'Arial Black'; font-size: 1em">
-                                                                    {{cmd.produit.nomProduit}}
-                                                                </div>
-                                                            </ion-col>
-                                                            <ion-col>
-                                                                <div style="font-family: 'Franklin Gothic Heavy'">
-                                                                    Quantite: {{cmd.quantite}}
-                                                                </div>
-                                                            </ion-col>
-                                                        </ion-row>
-                                                        <ion-row>
-                                                            <ion-col text-center
-                                                                style="font-family: 'Franklin Gothic Heavy'">
-                                                                <div>
-                                                                    Prix: {{cmd.produit.prix}}
-                                                                </div>
-                                                            </ion-col>
-                                                        </ion-row>
-                                                        <ion-row>
-                                                            <ion-col>
-                                                                <ion-row>
-                                                                    <ion-col>
-                                                                        <div row>
-                                                                            <button
-                                                                                (click)="updatePanier('ajouter', cmd)">
-                                                                                <ion-icon name="add"></ion-icon>
-                                                                            </button>
-                                                                            <button
-                                                                                (click)="updatePanier('enlever', cmd)">
-                                                                                <ion-icon name="remove"></ion-icon>
-                                                                            </button>
-                                                                            <button
-                                                                                (click)="updatePanier('enleverDuPanier', cmd)">
-                                                                                <ion-icon name="trash"></ion-icon>
-                                                                            </button>
-                                                                        </div>
-                                                                    </ion-col>
-                                                                </ion-row>
-                                                            </ion-col>
-                                                        </ion-row>
-                                                    </ion-col>
-                                                </ion-row>
-                                            </ion-grid>
-                                            <ion-item style="font-family: 'Comic Sans MS'">
-                                                <h2>Montant: {{subtotal}}</h2>
-                                            </ion-item>
-                                            <ion-button (click)="completeOrder()">Complete</ion-button>
-                                        </ion-card-content>
-                                    </ion-card>
-                                </ion-grid>
-                            </ion-row>
-                            <ion-row>
-                                <!--                                <ion-button *ngIf="getCommandLines().length === 0">Clear Panier-->
-                                <!--                                </ion-button>-->
-                                <!--                        <ion-button (click)="dismiss()">Back</ion-button>-->
-                            </ion-row>
+
                         </ion-col>
                     </ion-row>
                 </ion-card>

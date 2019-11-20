@@ -7,26 +7,41 @@
     </ion-toolbar>
     <ion-toolbar>
         <ion-row class="rowtime">
-            <ion-col size=4>
+            <ion-col size=3>
                 Debut
             </ion-col>
             <ion-col size=4>
                 Fin
+            </ion-col>
+            <ion-col size=0.5>
+
             </ion-col>
             <ion-col size=4>
 
             </ion-col>
         </ion-row>
         <ion-row>
-            <ion-col size=4>
-                <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
-                    [(ngModel)]="startTime">
-                </ion-datetime>
+            <ion-col size=3>
+                <ion-item>
+                    <div>
+                        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
+                            style="font-family: 'Franklin Gothic Heavy'" placeholder-color=brown size=4
+                            [(ngModel)]="startTime">
+                        </ion-datetime>
+                    </div>
+                </ion-item>
             </ion-col>
-            <ion-col size=4>
-                <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
-                    [(ngModel)]="endTime">
-                </ion-datetime>
+            <ion-col size=0.5>
+
+            </ion-col>
+            <ion-col size=3>
+                <ion-item>
+                    <div>
+                        <ion-datetime displayFormat="DD/MMMM/YYYY" min="2016" max="2100-10-31" pickerFormat="YYYY-MM-DD"
+                            style="font-family: 'Franklin Gothic Heavy'" [(ngModel)]="endTime">
+                        </ion-datetime>
+                    </div>
+                </ion-item>
             </ion-col>
             <ion-col size=4>
                 <ion-button (click)="getAllBytime()">
@@ -72,16 +87,19 @@
                                             </ion-row>
                                             <ion-row>
                                                 <ion-col size="4">
-                                                    <select [(ngModel)]="depenseService.selectedDepense.fournisseur"
-                                                        (change)="getProduitsByFournisseur()"
-                                                        [compareWith]="compareFunction"
-                                                        style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
-                                                        [ngModelOptions]="{standalone: true}">
-                                                        <option *ngFor="let fourn of fournisseurService.fournisseurs"
-                                                            [ngValue]="fourn">
-                                                            {{fourn.nom}}
-                                                        </option>
-                                                    </select>
+                                                    <ion-item>
+                                                        <select [(ngModel)]="depenseService.selectedDepense.fournisseur"
+                                                            (change)="getProduitsByFournisseur()"
+                                                            [compareWith]="compareFunction"
+                                                            style="font-family: 'Franklin Gothic Heavy'; border-color: #771d19"
+                                                            [ngModelOptions]="{standalone: true}">
+                                                            <option
+                                                                *ngFor="let fourn of fournisseurService.fournisseurs"
+                                                                [ngValue]="fourn">
+                                                                {{fourn.nom}}
+                                                            </option>
+                                                        </select>
+                                                    </ion-item>
                                                     <ion-item>
                                                         <ion-textarea name="description" #name="ngModel"
                                                             [(ngModel)]="depenseService.selectedDepense.description"

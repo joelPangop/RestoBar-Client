@@ -71,4 +71,10 @@ ion-menu {
   ion-datetime{
     --placeholder-color:var(--ion-color-primary);
   }
+
+  ion-toolbar{
+    --ion-background-color:  #771d19;
+  }
 }
+
+@import url('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css');
