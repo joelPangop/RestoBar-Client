@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { MenuPage } from './menu.page';
+import {CreateCommandePageModule} from '../create-commande/create-commande.module';
 
 const routes: Routes = [
   {
@@ -30,6 +31,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    CreateCommandePageModule,
     RouterModule.forChild(routes)
   ],
   declarations: [MenuPage],

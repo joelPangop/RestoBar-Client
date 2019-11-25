@@ -1,6 +1,6 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>Commande</ion-title>
+        <ion-title> <h1>Commande n# {{commandNumber}}</h1></ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -34,7 +34,7 @@
                         <h1>Commande n# {{commandNumber}}</h1>
                     </ion-card-header>
                     <ion-card-content>
-                        <ion-grid *ngFor="let cmd of getCommandLines()">
+                        <ion-grid *ngFor="let cmd of panierService.commande.ligneCommandes">
                             <ion-row *ngIf="renderProdPanier(cmd)">
                                 <ion-col>
                                     <ion-row>
@@ -88,6 +88,6 @@
         </ion-row>
     </ion-grid>
     <ion-row>
-        <ion-button (click)="dismiss()">Back</ion-button>
+        <ion-button id="backbutton" (click)="close()">Back</ion-button>
     </ion-row>
 </ion-content>

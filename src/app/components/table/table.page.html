@@ -10,49 +10,66 @@
 <ion-content>
     <ion-grid fixed style="width: inherit">
         <ion-row>
-            <ion-col size="6">
-                <ion-card class=”card”>
+            <ion-col size="8">
+                <ion-card class='card'>
                     <ion-grid fixed>
                         <ion-row>
                             <ion-col *ngFor="let table of tableService.tables" size="4">
+
                                 <ion-card>
-                                    <ion-item (click)="createCommand(table)">
-                                        <div>
-                                            <img src="assets/images/busyTable.jpg" *ngIf="table.status === 'BUSY'">
-                                            <img src="assets/images/freeTable.jpg" *ngIf="table.status === 'FREE'">
-                                            <img src="assets/images/reservedTable.jpg"
-                                                *ngIf="table.status === 'RESERVED'">
-                                        </div>
-                                        <ion-grid fixed>
-                                            <ion-row>
-                                                <ion-col>
-                                                    <ion-row>
-                                                        <div>N#: {{table.noTable}}</div>
-                                                    </ion-row>
-                                                    <ion-row>
-                                                        <div>Nombre de chaises: {{table.nbChaises}}</div>
-                                                    </ion-row>
-                                                </ion-col>
-                                            </ion-row>
-                                        </ion-grid>
-                                    </ion-item>
+                                   <ion-card-header>
+                                       <button style="color: rosybrown; float: right" (click)="deleteTable(table)">
+                                           <ion-icon name="close-circle"></ion-icon>
+                                       </button>
+                                   </ion-card-header>
+                                    <ion-card-content>
+                                        <ion-item (click)="createCommand(table)">
+                                            <div>
+                                                <img src="assets/images/busyTable.jpg" *ngIf="table.status === 'BUSY'">
+                                                <img src="assets/images/freeTable.jpg" *ngIf="table.status === 'FREE'">
+                                                <img src="assets/images/reservedTable.jpg"
+                                                     *ngIf="table.status === 'RESERVED'">
+                                            </div>
+                                            <ion-grid fixed>
+                                                <ion-row>
+                                                    <ion-col>
+                                                        <ion-row>
+                                                            <div>N#: {{table.noTable}}</div>
+                                                        </ion-row>
+                                                        <ion-row>
+                                                            <div>Nombre de chaises: {{table.nbChaises}}</div>
+                                                        </ion-row>
+                                                    </ion-col>
+                                                </ion-row>
+                                            </ion-grid>
+                                        </ion-item>
+                                    </ion-card-content>
                                 </ion-card>
                             </ion-col>
                         </ion-row>
                     </ion-grid>
                 </ion-card>
             </ion-col>
-            <ion-col size="6">
-                <ion-card>
-                    <ion-row>
-                        <ion-col size="6">
-                         
-                        </ion-col>
-                        <ion-col size="6">
-
-                        </ion-col>
-                    </ion-row>
-                </ion-card>
+            <ion-col size="4">
+                <form>
+                    <ion-card>
+                        <ion-card-header>Create new table</ion-card-header>
+                        <ion-card-content>
+                            <ion-grid>
+                                <ion-row>
+                                    <ion-item>
+                                        <div><ion-label>Number of chairs:</ion-label></div>
+                                        <ion-input [(ngModel)]="tableService.newTable.nbChaises"
+                                                   [ngModelOptions]="{standalone: true}" name="nbChaises"
+                                                   #name="ngModel"
+                                                   placeholder="Number of chairs"></ion-input>
+                                    </ion-item>
+                                </ion-row>
+                                <ion-button (click)="createTable()">Save</ion-button>
+                            </ion-grid>
+                        </ion-card-content>
+                    </ion-card>
+                </form>
             </ion-col>
         </ion-row>
     </ion-grid>

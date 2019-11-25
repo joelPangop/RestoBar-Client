@@ -6,6 +6,7 @@ import { ProduitPanier } from './produit-panier';
 export class LigneCommande {
 
     constructor() {
+        this.id = 0;
         this.quantite = 0;
     }
 

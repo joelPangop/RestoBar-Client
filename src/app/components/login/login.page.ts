@@ -30,13 +30,26 @@ export class LoginPage implements OnInit {
     });
   }
 
-  async onSubmit() {
-    await this.authService.login(this.credentialsForm.value).subscribe(success => {
-      if (success) {
-        console.log(success);
-        // this.navCtrl.navigateRoot("/");
+  async onSubmit(event) {
+    if (event.keyCode) {
+      if (event.keyCode == 13 && this.credentialsForm.valid) {
+        await this.authService.login(this.credentialsForm.value).subscribe(success => {
+          if (success) {
+            this.authService.isAdmin();
+            console.log(success);
+            // this.navCtrl.navigateRoot("/");
+          }
+        });
       }
-    });
+    } else {
+      await this.authService.login(this.credentialsForm.value).subscribe(success => {
+        if (success) {
+          this.authService.isAdmin();
+          console.log(success);
+          // this.navCtrl.navigateRoot("/");
+        }
+      });
+    }
   }
 
   register() {
@@ -74,9 +87,9 @@ export class LoginPage implements OnInit {
 
     // Has the user selected an attachment?
     // if (this._attachment.length > 1) {
-      // If so call the sendEmail method of the EmailProvider service, pass in
-      // the retrieved form data and watch the magic happen! :)
-      this.msgService.sendEmail(to, cc, bcc, '', subject, message);
+    // If so call the sendEmail method of the EmailProvider service, pass in
+    // the retrieved form data and watch the magic happen! :)
+    this.msgService.sendEmail(to, cc, bcc, '', subject, message);
     // }
     // else {
     //   // Inform the user that they need to add an attachment

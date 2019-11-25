@@ -5,7 +5,6 @@ import { Commande } from './commande';
 export class Table {
 
     constructor() {
-        this.noTable = 0;
         this.nbChaises = 0;
         this.status = TableStatus.FREE;
     }

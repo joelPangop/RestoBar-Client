@@ -36,7 +36,7 @@ export class ProduitService {
     }
 
     deleteProduit(produit: Produit) {
-        return this.http.delete(this.URL_API + "?produit="+JSON.stringify(produit));
+        return this.http.delete(this.URL_API + '?produit=' + JSON.stringify(produit));
     }
 
     findCommandeByProduit(produit: Produit){
