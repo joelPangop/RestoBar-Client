@@ -77,6 +77,8 @@ export class TablePage implements OnInit {
                 // this.getTableStatus(tableUpdated);
                 if (this.panierService.commande.ligneCommandes.length > 0 && this.panierService.commande.complete === false) {
                     tableUpdated.status = TableStatus.BUSY;
+                } else if (this.panierService.commande.ligneCommandes.length === 0) {
+                    tableUpdated.status = TableStatus.FREE;
                 }
                 this.panierService.commande = new Commande();
             });

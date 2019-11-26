@@ -9,6 +9,9 @@ import {Commande} from '../../models/commande';
 import {TableService} from '../../services/table.service';
 import {Router} from '@angular/router';
 import {TableStatus} from '../../models/table-status';
+import {AuthService} from '../../services/auth.service';
+import {FormBuilder, FormControl, FormGroup, NgForm} from '@angular/forms';
+import {finalize} from 'rxjs/operators';
 
 @Component({
     selector: 'app-create-commande',
@@ -19,12 +22,15 @@ export class CreateCommandePage implements OnInit {
     table: Table;
     commandNumber: number;
     subtotal = 0;
+    private panierForm: FormGroup;
+    loading: any;
 
     constructor(public panierService: PanierService, public modalController: ModalController,
-                public produitService: ProduitService,
+                public produitService: ProduitService, public formBuilder: FormBuilder,
                 public tableService: TableService, private router: Router, public loadingController: LoadingController,
                 public navParams: NavParams, public toastController: ToastController) {
         this.table = this.navParams.get('table');
+        this.panierForm = new FormGroup({update: new FormControl('')});
 
     }
 
@@ -35,7 +41,8 @@ export class CreateCommandePage implements OnInit {
 
     public async getCommandLines() {
         this.panierService.commande = new Commande();
-        this.panierService.getCommandeByTable(this.table).subscribe(res => {
+
+        await this.panierService.getCommandeByTable(this.table).subscribe(async res => {
             this.panierService.commande = res as Commande;
             this.subtotal = this.panierService.commande.montant;
             console.log(res);
@@ -65,12 +72,17 @@ export class CreateCommandePage implements OnInit {
     public async addCommande(produit: Produit) {
         const ldc: LigneCommande = this.panierService.panier.get(produit.id);
         if (produit.quantite > 0 && !ldc) {
+            this.loading = await this.loadingController.create({
+                message: 'Loading...'
+            });
+            await this.loading.present();
             const ligneCommande: LigneCommande = new LigneCommande();
             this.commandNumber = this.getRandomInt();
             ligneCommande.produit = produit;
             ligneCommande.quantite = 1;
             produit.quantite--;
-            this.panierService.ajouter(this.panierService.panier, ligneCommande);
+            await this.panierService.ajouter(ligneCommande);
+            // this.panierService.ajouter(this.panierService.panier, ligneCommande);
             this.getSubTotal(this.panierService.commande.ligneCommandes);
             this.checkoutcommand(false);
         } else if (produit.quantite < 0) {
@@ -79,10 +91,15 @@ export class CreateCommandePage implements OnInit {
     }
 
     public async updatePanier(operation, ligneCommande: LigneCommande) {
+        this.loading = await this.loadingController.create({
+            message: 'Loading...'
+        });
+        await this.loading.present();
         switch (operation) {
             case 'ajouter':
                 if (ligneCommande.produit.quantite > 0) {
-                    this.panierService.ajouter(this.panierService.panier, ligneCommande);
+                    await this.panierService.ajouter(ligneCommande);
+                    // await this.panierService.ajouter(this.panierService.panier, ligneCommande);
                     this.getSubTotal(this.panierService.commande.ligneCommandes);
                     this.checkoutcommand(false);
                     break;
@@ -94,15 +111,15 @@ export class CreateCommandePage implements OnInit {
                 if (ligneCommande.quantite === 1) {
                     this.presentToast('Produit retiré de la commande');
                 }
-                this.panierService.enlever(this.panierService.panier, ligneCommande);
+                await this.panierService.enlever(ligneCommande);
                 this.getSubTotal(this.panierService.commande.ligneCommandes);
                 this.checkoutcommand(false);
                 break;
             case 'vider':
-                this.panierService.supprimer(this.panierService.panier, ligneCommande);
+                // await this.panierService.supprimer(ligneCommande);
                 break;
             case 'enleverDuPanier':
-                await this.panierService.supprimer(this.panierService.panier, ligneCommande);
+                await this.panierService.supprimer(ligneCommande);
                 await this.getSubTotal(this.panierService.commande.ligneCommandes);
                 await this.checkoutcommand(false);
                 this.commandNumber = this.panierService.commande.numCmd;
@@ -123,6 +140,8 @@ export class CreateCommandePage implements OnInit {
         this.panierService.commande.montant = this.subtotal;
         this.panierService.commande.numCmd = this.commandNumber;
         this.panierService.checkoutCommand().subscribe(res => {
+            this.panierService.commande = res as Commande;
+            this.loading.dismiss();
             console.log(res as Commande);
         });
     }
@@ -130,6 +149,7 @@ export class CreateCommandePage implements OnInit {
     async completeOrder() {
         this.checkoutcommand(true).then(async res => {
             this.table.status = TableStatus.FREE;
+            await this.presentToast('Commande complétée');
             await this.close();
         });
     }

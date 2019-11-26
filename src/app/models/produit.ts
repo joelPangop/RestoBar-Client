@@ -1,5 +1,4 @@
 import {TypeProduit} from './type-produit';
-import {LigneCommande} from './ligne-commande';
 
 export class Produit {
 
@@ -8,7 +7,7 @@ export class Produit {
         this.description = '';
         this.quantite = 0;
         this.prix = 0;
-        this.type = TypeProduit.LIQUEUR
+        this.type = TypeProduit.LIQUEUR;
     }
 
     id: number;
@@ -17,5 +16,4 @@ export class Produit {
     type: string;
     quantite: number;
     prix: number;
-    ligneCommandes: LigneCommande[];
 }

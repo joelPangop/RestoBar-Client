@@ -8,6 +8,7 @@ import {Commande} from '../models/commande';
 import {TableStatus} from '../models/table-status';
 import {tap} from 'rxjs/operators';
 import {Produit} from '../models/produit';
+import {Utils} from './utils';
 
 @Injectable({
     providedIn: 'root'
@@ -37,13 +38,14 @@ export class PanierService {
             // this.panierTransactionService.updatePanier(ligneCmd, operation);
             switch (operation) {
                 case 'ajouter':
-                    this.ajouter(this.panier, ligneCmd);
+                    this.ajouter(ligneCmd);
+                    // this.ajouter(this.panier, ligneCmd);
                     break;
                 case 'enlever':
-                    this.enlever(this.panier, ligneCmd);
+                    this.enlever(ligneCmd);
                     break;
                 case 'vider':
-                    this.supprimer(this.panier, ligneCmd);
+                    this.supprimer(ligneCmd);
                     break;
                 case 'enleverDuPanier':
                     this.panier.delete(ligneCmd.produit.id);
@@ -54,9 +56,9 @@ export class PanierService {
         }
     }
 
-    public async ajouter(panier: Map<number, LigneCommande>, ligneCmd: LigneCommande) {
+    public async ajouter(ligneCmd: LigneCommande) {
 
-        if (panier.get(ligneCmd.produit.id) != null) {
+        if (this.commande.ligneCommandes.includes(ligneCmd)) {
             ligneCmd.quantite++;
             for (let e of this.produits) {
                 if (e.nomProduit === ligneCmd.produit.nomProduit) {
@@ -69,16 +71,15 @@ export class PanierService {
         } else {
             this.commande.ligneCommandes.push(ligneCmd as LigneCommande);
         }
-        panier.set(ligneCmd.produit.id, ligneCmd);
+        // panier.set(ligneCmd.produit.id, ligneCmd);
         this.commande.table.status = TableStatus.BUSY;
     }
 
-    public async enlever(panier: Map<number, LigneCommande>, ligneCmd: LigneCommande) {
-        if (panier.get(ligneCmd.produit.id) != null) {
+    public async enlever(ligneCmd: LigneCommande) {
+        if (this.commande.ligneCommandes.includes(ligneCmd)) {
             // const qte = panier.get(ligneCmd.produit.produit.id).produit.quantite;
             if (ligneCmd.quantite > 0) {
                 if (ligneCmd.quantite === 1) {
-                    this.panier.delete(ligneCmd.produit.id);
                     for (let e of this.produits) {
                         if (e.nomProduit === ligneCmd.produit.nomProduit) {
                             e.quantite++;
@@ -87,10 +88,7 @@ export class PanierService {
                             });
                         }
                     }
-                    const index = this.commande.ligneCommandes.indexOf(ligneCmd, 0);
-                    if (index > -1) {
-                        this.commande.ligneCommandes.splice(index, 1);
-                    }
+                    Utils.deleteItemFromArray(this.commande.ligneCommandes, ligneCmd);
                 } else {
                     ligneCmd.quantite--;
                     this.produits.forEach(e => {
@@ -104,11 +102,9 @@ export class PanierService {
         }
     }
 
-    public async supprimer(panier: Map<number, LigneCommande>, ligneCmd: LigneCommande) {
-        if (panier.size !== 0) {
-            if (panier.get(ligneCmd.produit.id) != null) {
-                // ligneCmd.produit.quantite += ligneCmd.quantite;
-                panier.delete(ligneCmd.produit.id);
+    public async supprimer(ligneCmd: LigneCommande) {
+        if (this.commande.ligneCommandes.length !== 0) {
+            if (this.commande.ligneCommandes.includes(ligneCmd)) {
                 for (let e of this.produits) {
                     if (e.nomProduit === ligneCmd.produit.nomProduit) {
                         e.quantite += ligneCmd.quantite;
@@ -130,19 +126,21 @@ export class PanierService {
 
     public checkoutCommand() {
         if (this.commande.id !== undefined) {
-            const url: string = this.URL + `/${this.commande.id}`;
-            return this.http.put<Commande>(url, this.commande).pipe(
-                tap(async (res: Commande) => {
-                    console.log(res);
-                })
-            );
+            const url: string = this.URL + `/${this.commande.id}` + '?panier=' + JSON.stringify(this.commande.ligneCommandes);
+            return this.http.put<Commande>(url, this.commande);
+            // return this.http.put<Commande>(url, this.commande).pipe(
+            //     tap(async (res: Commande) => {
+            //         console.log(res);
+            //     })
+            // );
         } else {
             const url: string = this.URL;
-            return this.http.post<Commande>(url, this.commande).pipe(
-                tap(async (res: Commande) => {
-                    console.log(res);
-                })
-            );
+            return this.http.post<Commande>(url, this.commande);
+            // return this.http.post<Commande>(url, this.commande).pipe(
+            //     tap(async (res: Commande) => {
+            //         console.log(res);
+            //     })
+            // );
         }
     }
 

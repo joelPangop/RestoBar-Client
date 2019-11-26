@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormBuilder, FormGroup, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
-import * as bcrypt from "bcryptjs";
 
 @Component({
   selector: 'app-profile',
@@ -10,14 +9,6 @@ import * as bcrypt from "bcryptjs";
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-
-  userForm: FormGroup;
-
-  ischanged: boolean;
-  error_messages = {};
-  passwordType: string = 'password';
-  passwordShown: boolean;
-  static pwd: string;
 
   constructor(public authService: AuthService, public formBuilder: FormBuilder, private userService: UserService) {
     this.userForm = this.formBuilder.group({
@@ -30,6 +21,15 @@ export class ProfilePage implements OnInit {
       ])
     }, { validator: this.password });
   }
+  static pwd: string;
+
+  userForm: FormGroup;
+
+  ischanged: boolean;
+  // tslint:disable-next-line:variable-name
+  error_messages = {};
+  passwordType = 'password';
+  passwordShown: boolean;
 
   ngOnInit() {
     this.ischanged = false;
@@ -47,7 +47,7 @@ export class ProfilePage implements OnInit {
   }
 
   password(formGroup: FormGroup): { [err: string]: any } {
-    return formGroup.get('password').value === formGroup.get('passwordConfirm').value ? null : { 'passwordMismatch': true };
+    return formGroup.get('password').value === formGroup.get('passwordConfirm').value ? null : { passwordMismatch: true };
   }
 
   async saveUser() {
