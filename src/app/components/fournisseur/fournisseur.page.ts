@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FournisseurService } from '../../services/fournisseur.service';
-import { TypeDepense } from '../../models/type-depense';
-import { Fournisseur } from '../../models/fournisseur';
-import { NgForm } from '@angular/forms';
-import { ModalController, ToastController } from '@ionic/angular';
-import { Adresse } from '../../models/adresse';
-import { ProduitService } from '../../services/produit.service';
-import { Produit } from '../../models/produit';
-import { TypeProduit } from '../../models/type-produit';
-import { Telephone } from 'src/app/models/telephone';
-import { CategorieTelephone } from 'src/app/models/categorie-telephone';
+import {Component, OnInit} from '@angular/core';
+import {FournisseurService} from '../../services/fournisseur.service';
+import {TypeDepense} from '../../models/type-depense';
+import {Fournisseur} from '../../models/fournisseur';
+import {NgForm} from '@angular/forms';
+import {ModalController, ToastController} from '@ionic/angular';
+import {Adresse} from '../../models/adresse';
+import {ProduitService} from '../../services/produit.service';
+import {Produit} from '../../models/produit';
+import {TypeProduit} from '../../models/type-produit';
+import {Telephone} from 'src/app/models/telephone';
+import {CategorieTelephone} from 'src/app/models/categorie-telephone';
 
 @Component({
     selector: 'app-fournisseur',
@@ -22,10 +22,12 @@ export class FournisseurPage implements OnInit {
     options: string[];
     phoneOptions: string[];
     produits: Produit[];
+    productNames: string[];
 
     constructor(public fournisseurService: FournisseurService, private toastController: ToastController,
-        public produitService: ProduitService, public modalController: ModalController) {
+                public produitService: ProduitService, public modalController: ModalController) {
         this.produits = [];
+        this.productNames = [];
     }
 
     ngOnInit() {
@@ -50,8 +52,9 @@ export class FournisseurPage implements OnInit {
     getFournisseur(body: any) {
         this.fournisseurService.selectedFournisseur = body as Fournisseur;
         this.fournisseurService.adresse = body.adresse;
-        if (body.telephones)
+        if (body.telephones) {
             this.fournisseurService.telephones = body.telephones;
+        }
     }
 
     deleteFournisseur(body: Fournisseur) {
@@ -64,6 +67,9 @@ export class FournisseurPage implements OnInit {
     async getAllProduits() {
         await this.produitService.getAll().subscribe(res => {
             this.produitService.produits = res as Produit[];
+            for (const prod of this.produitService.produits) {
+                this.productNames.push(prod.nomProduit);
+            }
             console.log(this.produitService.produits);
         });
     }
@@ -78,7 +84,7 @@ export class FournisseurPage implements OnInit {
     deleteProduit(produit: Produit) {
         this.produitService.findCommandeByProduit(produit).subscribe(res => {
             if (res) {
-                this.presentToast("Produit assigné à une ou plusieurs commandes");
+                this.presentToast('Produit assigné à une ou plusieurs commandes');
             } else {
                 this.produitService.deleteProduit(produit).subscribe(res => {
                     console.log(res);
@@ -126,14 +132,18 @@ export class FournisseurPage implements OnInit {
                     this.presentToast('Updated Successfully');
                 });
         } else {
-            this.produitService.createProduit(this.produitService.produit)
-                .subscribe(res => {
-                    console.log(res);
-                    this.resetForm(form);
-                    console.log(res);
-                });
-            this.produitService.produits.push(this.produitService.produit);
-            form.reset();
+            if (!this.productNames.includes(this.produitService.produit.nomProduit)) {
+                this.produitService.createProduit(this.produitService.produit)
+                    .subscribe(res => {
+                        console.log(res);
+                        this.resetForm(form);
+                        console.log(res);
+                    });
+                this.produitService.produits.push(this.produitService.produit);
+                form.reset();
+            } else {
+                this.presentToast('Produit deja existant');
+            }
         }
     }
 
@@ -147,7 +157,6 @@ export class FournisseurPage implements OnInit {
         this.fournisseurService.adresse = new Adresse();
         this.produitService.produit = new Produit();
         this.fournisseurService.telephones = [];
-
     }
 
     resetProduit() {
@@ -169,7 +178,7 @@ export class FournisseurPage implements OnInit {
             if (this.fournisseurService.telephones[this.fournisseurService.telephones.length - 1].numeroTelephone !== '') {
                 this.fournisseurService.telephones.push(new Telephone());
             }
-        }else{
+        } else {
             this.fournisseurService.telephones.push(new Telephone());
         }
     }

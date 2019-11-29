@@ -9,7 +9,7 @@ import { Telephone } from '../models/telephone';
 })
 export class UserService {
 
-  URL = "http://localhost:4000/user"
+  URL = 'http://localhost:4000/user';
 
   users: User[];
   selectedUser: User;

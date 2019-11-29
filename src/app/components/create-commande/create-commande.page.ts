@@ -41,26 +41,32 @@ export class CreateCommandePage implements OnInit {
 
     public async getCommandLines() {
         this.panierService.commande = new Commande();
-
-        await this.panierService.getCommandeByTable(this.table).subscribe(async res => {
-            this.panierService.commande = res as Commande;
-            this.subtotal = this.panierService.commande.montant;
-            console.log(res);
-            if (this.panierService.commande.ligneCommandes.length > 0) {
-                this.commandNumber = this.panierService.commande.numCmd;
-                this.getSubTotal(this.panierService.commande.ligneCommandes);
-                for (const ldc of this.panierService.commande.ligneCommandes) {
-                    if (ldc.commande.complete === false) {
-                        for (const prod of this.panierService.produits) {
-                            if (prod.id === ldc.produit.id) {
-                                prod.quantite -= ldc.quantite;
-                            }
-                        }
-                        this.panierService.panier.set(ldc.produit.id, ldc);
-                    }
-                }
-            }
+        this.panierService.panier = new Map<number, LigneCommande>();
+        this.loading = await this.loadingController.create({
+            message: 'Loading...'
         });
+        await this.panierService.getCommandeByTable(this.table)
+            .subscribe(async res => {
+                this.panierService.commande = res as Commande;
+                this.subtotal = this.panierService.commande.montant;
+                console.log(res);
+                if (this.panierService.commande.ligneCommandes.length > 0) {
+                    this.commandNumber = this.panierService.commande.numCmd;
+                    this.getSubTotal(this.panierService.commande.ligneCommandes);
+                    for (const ldc of this.panierService.commande.ligneCommandes) {
+                        if (ldc.commande.complete === false) {
+                            for (const prod of this.panierService.produits) {
+                                if (prod.id === ldc.produit.id) {
+                                    prod.quantite -= ldc.quantite;
+                                }
+                            }
+                            this.panierService.panier.set(ldc.produit.id, ldc);
+                        }
+                    }
+                    await this.loading.dismiss();
+                }
+            });
+        await this.loading.dismiss();
     }
 
     public async getProduits() {

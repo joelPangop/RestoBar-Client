@@ -21,7 +21,6 @@ export class TablePage implements OnInit {
     subtotal = 0;
     commande: Commande;
 
-    // tslint:disable-next-line:max-line-length
     constructor(public tableService: TableService, private router: Router, public loadingController: LoadingController, public produitService: ProduitService,
                 public toastController: ToastController, public route: ActivatedRoute, public modalController: ModalController, public panierService: PanierService) {
         this.table = new Table();
@@ -82,7 +81,6 @@ export class TablePage implements OnInit {
                 }
                 this.panierService.commande = new Commande();
             });
-
         return await modal.present();
     }
 
@@ -97,18 +95,31 @@ export class TablePage implements OnInit {
     }
 
     async createTable() {
-        this.tableService.newTable.noTable = this.tableService.tables.length + 1;
-        this.tableService.createTable(this.tableService.newTable).subscribe(res => {
+        const loading = await this.loadingController.create({
+            message: 'Loading...'
+        });
+        await loading.present();
+        let i;
+        for (i = 1; i <= this.tableService.tables.length; i++) {
+            if (i !== this.tableService.tables[i - 1].noTable) {
+                this.tableService.newTable.noTable = i;
+            } else {
+                this.tableService.newTable.noTable = this.tableService.tables.length + 1;
+            }
+        }
+
+        this.tableService.createTable(this.tableService.newTable).subscribe(async res => {
             const newTable = res as Table;
             newTable.status = TableStatus.FREE;
             this.tableService.tables.push(newTable);
             this.tableService.newTable = new Table();
+            await loading.dismiss();
         });
     }
 
     async deleteTable(table: Table) {
-        if (table.status === TableStatus.FREE) {
-            this.tableService.deleteTable(table).subscribe(res => {
+        if (table.status === TableStatus.FREE || this.tableService.tables.length === 1) {
+            this.tableService.deleteTable(table).subscribe( res => {
                 Utils.deleteItemFromArray(this.tableService.tables, table);
             });
         }

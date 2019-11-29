@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { DepenseService } from '../../services/depense.service';
-import { ToastController, LoadingController } from '@ionic/angular';
-import { FournisseurService } from '../../services/fournisseur.service';
-import { TypeDepense } from '../../models/type-depense';
-import { Depense } from '../../models/depense';
-import { NgForm } from '@angular/forms';
-import { Fournisseur } from '../../models/fournisseur';
-import { Produit } from '../../models/produit';
-import { ProduitAchat } from '../../models/produit-achat';
-import { User } from 'src/app/models/user';
-import { UserService } from 'src/app/services/user.service';
-import { DatePipe } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {DepenseService} from '../../services/depense.service';
+import {ToastController, LoadingController} from '@ionic/angular';
+import {FournisseurService} from '../../services/fournisseur.service';
+import {TypeDepense} from '../../models/type-depense';
+import {Depense} from '../../models/depense';
+import {NgForm} from '@angular/forms';
+import {Fournisseur} from '../../models/fournisseur';
+import {Produit} from '../../models/produit';
+import {ProduitAchat} from '../../models/produit-achat';
+import {User} from 'src/app/models/user';
+import {UserService} from 'src/app/services/user.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
     selector: 'app-depense',
@@ -30,9 +30,9 @@ export class DepensePage implements OnInit {
     startTime: Date;
 
     constructor(public depenseService: DepenseService, public fournisseurService: FournisseurService,
-        private loadingController: LoadingController,
-        public userService: UserService, public datepipe: DatePipe,
-        private toastController: ToastController) {
+                private loadingController: LoadingController,
+                public userService: UserService, public datepipe: DatePipe,
+                private toastController: ToastController) {
         this.produits = [];
         this.achatFournisseurs = [];
     }
@@ -56,11 +56,11 @@ export class DepensePage implements OnInit {
     }
 
     async getAllBytime() {
-        let latest_startTime =this.datepipe.transform(this.startTime, 'yyyy-MM-dd');
-        let latest_endTime =this.datepipe.transform(this.endTime, 'yyyy-MM-dd');
+        const latest_startTime = this.datepipe.transform(this.startTime, 'yyyy-MM-dd');
+        const latest_endTime = this.datepipe.transform(this.endTime, 'yyyy-MM-dd');
         await this.depenseService.getByTime(latest_startTime, latest_endTime).subscribe(res => {
             this.depenseService.depenses = res as Depense[];
-        })
+        });
     }
 
     getDepense(body: any) {
@@ -73,13 +73,13 @@ export class DepensePage implements OnInit {
         }
 
         this.depenseService.getDepense(this.depenseService.selectedDepense).subscribe(res => {
-            let dep = res as Depense;
+            const dep = res as Depense;
             this.quantiteTotale = dep.quantite;
-            this.montantTotale = dep.montant
+            this.montantTotale = dep.montant;
             this.depenseService.selectedDepense = dep;
             this.achatFournisseurs = dep.produitAchats;
         });
-        let mnt = this.depenseService.selectedDepense.montant;
+        const mnt = this.depenseService.selectedDepense.montant;
         // for(let prod of this.produits){
         //     let prodAchat: ProduitAchat = new ProduitAchat();
         //     prodAchat.produit = prod;
@@ -88,17 +88,18 @@ export class DepensePage implements OnInit {
         // }
         // this.achatFournisseurs.forEach(e =>{ this.getMontant(e)});
     }
-    getUsers = async () => {
-        const loading = await this.loadingController.create({
-            message: 'Loading...'
-        });
-        await loading.present();
+
+    getUsers(){
+        // const loading = await this.loadingController.create({
+        //     message: 'Loading...'
+        // });
+        // await loading.present();
         this.userService.getUsers()
             .subscribe(res => {
                 this.userService.users = res as User[];
-                loading.dismiss();
+                // loading.dismiss();
             });
-    };
+    }
 
     compareFunction(c1: Fournisseur, c2: Fournisseur): boolean {
         return c1 && c2 ? c1.id === c2.id : c1 === c2;
@@ -126,7 +127,7 @@ export class DepensePage implements OnInit {
     }
 
     getEmployeSalaire() {
-        this.userService.getUser(this.depenseService.selectedDepense.user).subscribe(res => {
+        this.userService.getUser(this.depenseService.selectedDepense.user.id).subscribe(res => {
             this.depenseService.selectedDepense.user = res as User;
         });
     }
@@ -145,7 +146,7 @@ export class DepensePage implements OnInit {
             case TypeDepense.ACHAT:
                 for (let p of this.depenseService.selectedDepense.produitAchats) {
                     this.montantTotale += p.montant;
-                    this.quantiteTotale += parseInt("" + p.quantite);
+                    this.quantiteTotale += parseInt('' + p.quantite);
                 }
                 this.depenseService.selectedDepense.montant = this.montantTotale;
                 this.depenseService.selectedDepense.quantite = this.quantiteTotale;
@@ -172,7 +173,7 @@ export class DepensePage implements OnInit {
             if (this.typeDepense === TypeDepense.ACHAT) {
                 this.achatFournisseurs.forEach(res => {
                     this.depenseService.selectedDepense.produitAchats.push(res as ProduitAchat);
-                })
+                });
             }
             this.depenseService.selectedDepense.numDepense = this.getRandomInt();
             this.depenseService.selectedDepense.dateDepense = new Date();
@@ -199,7 +200,7 @@ export class DepensePage implements OnInit {
     resetForm(form?: NgForm) {
         this.depenseService.selectedDepense = new Depense();
         this.achatFournisseurs = [];
-        this.montantTotale = 0
+        this.montantTotale = 0;
         this.quantiteTotale = 0;
         form.reset();
     }
@@ -231,7 +232,7 @@ export class DepensePage implements OnInit {
 
     getTotalQuantite() {
         for (let m of this.achatFournisseurs) {
-            this.quantiteTotale += parseInt("" + m.quantite);
+            this.quantiteTotale += parseInt('' + m.quantite);
         }
     }
 

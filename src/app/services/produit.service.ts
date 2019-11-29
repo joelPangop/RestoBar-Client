@@ -31,7 +31,7 @@ export class ProduitService {
         return this.http.post(this.URL_API, produit);
     }
 
-     editProduit(produit: Produit) {
+    editProduit(produit: Produit) {
         return this.http.put(this.URL_API + `/${produit.id}`, produit);
     }
 
@@ -39,7 +39,7 @@ export class ProduitService {
         return this.http.delete(this.URL_API + '?produit=' + JSON.stringify(produit));
     }
 
-    findCommandeByProduit(produit: Produit){
+    findCommandeByProduit(produit: Produit) {
         const url = this.URL_CMD_PROD_API + '/' + produit.id;
         return this.http.get(url);
     }
